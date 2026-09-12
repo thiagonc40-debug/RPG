@@ -1,19 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Ordem do Zênite: RPG Tático Dark Fantasy</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#d4af37">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>Ordem do Zênite: RPG Tático Dark Fantasy</title>
+<link href="manifest.json" rel="manifest">
+<meta content="#d4af37" name="theme-color">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&amp;family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Cinzel+Decorative:wght@700&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
     tailwind.config = {
+      darkMode: "class",
       theme: {
         extend: {
           colors: {
@@ -30,15 +30,16 @@
           fontFamily: {
             serif: ['"EB Garamond"', 'serif'],
             display: ['"Cinzel"', 'serif'],
+            sans: ['"Inter"', 'sans-serif'],
             decorative: ['"Cinzel Decorative"', 'serif']
           }
         }
       }
     }
   </script>
-  <style>
+<style>
     body {
-      background-color: #080b10;
+      background-color: #070a0e;
       color: #e2e8f0;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
@@ -52,718 +53,1185 @@
     }
     .glow-gold { animation: pulse-gold 3s infinite ease-in-out; }
     .dmg-pop {
-      animation: floatUp 0.8s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+      animation: floatUp 0.85s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     @keyframes floatUp {
       0% { opacity: 1; transform: translateY(0) scale(1); }
-      50% { transform: translateY(-30px) scale(1.3); }
-      100% { opacity: 0; transform: translateY(-50px) scale(0.9); }
+      40% { opacity: 1; transform: translateY(-32px) scale(1.35); }
+      100% { opacity: 0; transform: translateY(-56px) scale(0.9); }
     }
     .screen-container {
       display: none;
       min-height: calc(100vh - 128px);
-      padding-bottom: 90px;
+      padding-bottom: 92px;
     }
     .screen-container.active {
       display: block;
-      animation: fadeIn 0.25s ease-out;
+      animation: fadeIn 0.22s ease-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.985); }
+      from { opacity: 0; transform: scale(0.99); }
       to { opacity: 1; transform: scale(1); }
+    }
+    .modal-backdrop {
+      backdrop-filter: blur(8px);
+      background-color: rgba(6, 9, 14, 0.85);
     }
   </style>
 </head>
-<body class="bg-[#080b10] text-slate-100 flex flex-col min-h-screen max-w-md mx-auto relative border-x border-[#232d3d] shadow-2xl overflow-x-hidden">
-
-  <!-- TOP STATUS BAR MOBILE -->
-  <header class="sticky top-0 z-40 bg-[#0d1218]/95 backdrop-blur-md border-b border-[#2d3748] px-3.5 py-2.5 flex items-center justify-between text-xs">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-full border border-gold/60 bg-[#161c24] flex items-center justify-center font-display font-bold text-gold text-sm shadow">
-        ⚔️
+<body class="bg-[#070a0e] text-slate-100 flex flex-col min-h-screen max-w-md mx-auto relative border-x border-[#232d3d] shadow-2xl overflow-x-hidden antialiased">
+<!-- TOP STATUS BAR MOBILE -->
+<header class="sticky top-0 z-40 bg-[#0c1117]/95 backdrop-blur-md border-b border-[#2d3748] px-3.5 py-2.5 flex items-center justify-between text-xs">
+<div class="flex items-center gap-2 cursor-pointer" onclick="openProfileModal()">
+<div class="w-8 h-8 rounded-full border border-gold/60 bg-[#161c24] flex items-center justify-center font-display font-bold text-gold text-sm shadow" id="top-hero-icon">
+        🛡️
       </div>
-      <div>
-        <div class="font-display font-bold text-gold tracking-wide text-[13px] flex items-center gap-1">
-          Valerius <span class="text-[10px] px-1.5 py-0.2 rounded bg-gold/20 text-gold-light border border-gold/30">Nv.42</span>
-        </div>
-        <div class="text-[10px] text-slate-400">Paladino da Luz • Ordem do Zênite</div>
-      </div>
-    </div>
-    
-    <div class="flex items-center gap-3 text-[11px] font-mono">
-      <div class="flex items-center gap-1 bg-[#161c24] px-2 py-1 rounded border border-[#2d3748]">
-        <span class="text-amber-400">🪙</span>
-        <span id="top-gold">48.2K</span>
-      </div>
-      <div class="flex items-center gap-1 bg-[#161c24] px-2 py-1 rounded border border-[#2d3748]">
-        <span class="text-cyan-400">💎</span>
-        <span id="top-gems">620</span>
-      </div>
-      <div class="flex items-center gap-1 bg-[#161c24] px-2 py-1 rounded border border-[#2d3748]">
-        <span class="text-blue-400">⚡</span>
-        <span id="top-energy">94/120</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- POPUP NOTIFICATION TOAST -->
-  <div id="toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 bg-[#18202c] border border-gold/50 text-gold-light px-4 py-2 rounded-full text-xs font-serif shadow-2xl transition-all duration-300 pointer-events-none opacity-0 translate-y-2">
+<div>
+<div class="font-display font-bold text-gold tracking-wide text-[13px] flex items-center gap-1">
+<span id="top-hero-name" class="">Valerius</span>
+<span class="text-[10px] px-1.5 py-0.2 rounded bg-gold/20 text-gold-light border border-gold/30" id="top-hero-level">Nv.1</span>
+</div>
+<div class="text-[10px] text-slate-400" id="top-hero-sub">Paladino • Ordem do Zênite</div>
+</div>
+</div>
+<div class="flex items-center gap-2 text-[11px] font-mono">
+<div class="flex items-center gap-1 bg-[#161c24] px-2 py-1 rounded border border-[#2d3748]" title="Ouro da Ordem">
+<span class="text-amber-400">🪙</span>
+<span id="top-gold" class="">2.500</span>
+</div>
+<div class="flex items-center gap-1 bg-[#161c24] px-2 py-1 rounded border border-[#2d3748]" title="Cristais Astrais">
+<span class="text-cyan-400">💎</span>
+<span id="top-gems" class="">300</span>
+</div>
+<button class="bg-gold/20 hover:bg-gold/30 text-gold border border-gold/40 rounded px-1.5 py-1 text-[11px] font-sans flex items-center" onclick="saveGame(true)" title="Salvar Progresso">
+        💾
+      </button>
+</div>
+</header>
+<!-- POPUP NOTIFICATION TOAST -->
+<div class="fixed top-14 left-1/2 -translate-x-1/2 z-50 bg-[#18202c] border border-gold/60 text-gold-light px-4 py-2 rounded-full text-xs font-serif shadow-2xl transition-all duration-300 pointer-events-none opacity-0 translate-y-2 max-w-[90%] text-center" id="toast">
     Ação realizada!
   </div>
-
-  <!-- SCREENS CONTENT -->
-
-  <!-- 1. TELA: LOBBY & MENU PRINCIPAL -->
-  <section id="screen-lobby" class="screen-container active p-4 space-y-4">
-    <!-- Hero Banner Eclipse -->
-    <div class="relative rounded-2xl overflow-hidden border border-gold/30 p-5 bg-gradient-to-b from-[#1a1c26] via-[#10141d] to-[#0a0d13] shadow-lg">
-      <div class="absolute -right-4 -top-4 w-32 h-32 rounded-full bg-crimson/10 blur-2xl pointer-events-none"></div>
-      <div class="text-[11px] font-display uppercase tracking-widest text-gold/80 mb-1">Campanha do Eclipse de Sangue</div>
-      <h1 class="text-2xl font-display font-black text-slate-100 mb-2">Capítulo X: O Antro de Enxofre</h1>
-      <p class="text-xs text-slate-300 leading-relaxed mb-4">
-        Malfathor desperta sob as cinzas de Valíria. O portal da 10ª Masmorra está aberto para o confronto decisivo.
+<!-- SCREENS CONTENT -->
+<!-- 1. TELA: LOBBY & MENU PRINCIPAL -->
+<section class="screen-container p-4 space-y-4" id="screen-lobby">
+<!-- Hero Banner Campanha -->
+<div class="relative rounded-2xl overflow-hidden border border-gold/30 p-5 bg-gradient-to-b from-[#1c1f2d] via-[#10141d] to-[#0a0d13] shadow-lg">
+<div class="absolute -right-4 -top-4 w-32 h-32 rounded-full bg-crimson/15 blur-2xl pointer-events-none"></div>
+<div class="text-[11px] font-display uppercase tracking-widest text-gold/80 mb-1 flex items-center justify-between">
+<span class="">Campanha do Eclipse de Sangue</span>
+<span class="bg-crimson/20 border border-crimson/40 text-red-300 px-2 py-0.5 rounded text-[10px] font-sans" id="lobby-fase-badge">Fase 1 / 10</span>
+</div>
+<h1 class="text-2xl font-display font-black text-slate-100 mb-1" id="lobby-target-title">Capítulo I: Cripta das Cinzas</h1>
+<p class="text-xs text-slate-300 leading-relaxed mb-4" id="lobby-target-desc">
+        Gorgoroth, o Carniceiro, profana os sepulcros imperiais. Reúna sua coragem e restaure a luz do Zênite.
       </p>
-      <div class="flex items-center gap-3">
-        <button onclick="navigateTo('screen-battle')" class="flex-1 bg-gradient-to-r from-crimson to-amber-600 hover:from-red-600 hover:to-amber-500 text-white font-display font-bold py-2.5 px-4 rounded-xl shadow-lg border border-red-400/40 text-xs flex items-center justify-center gap-2">
-          <span>🔥</span> ENTRAR NA BATALHA FINAL
-        </button>
-        <button onclick="navigateTo('screen-map')" class="bg-[#1e2634] hover:bg-[#283244] border border-[#3b475a] text-slate-200 font-display font-medium py-2.5 px-3 rounded-xl text-xs">
+<!-- EXP Bar -->
+<div class="mb-4 bg-[#090d13] p-2.5 rounded-xl border border-[#273244] space-y-1">
+<div class="flex justify-between text-[11px] font-mono">
+<span class="text-gold flex items-center gap-1 font-display">XP Nv.<span id="lobby-hero-lvl" class="">1</span></span>
+<span class="text-slate-400" id="lobby-exp-text">0 / 300 XP</span>
+</div>
+<div class="w-full h-2 bg-black/60 rounded-full border border-gold/20 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-amber-600 to-gold transition-all duration-300" id="lobby-exp-bar" style="width: 0%;"></div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex-1 bg-gradient-to-r from-crimson to-amber-600 hover:from-red-600 hover:to-amber-500 text-white font-display font-bold py-2.5 px-4 rounded-xl shadow-lg border border-red-400/40 text-xs flex items-center justify-center gap-2" onclick="startBossBattle(gameData.unlockedStage)">
+<span class="">🔥</span> <span id="lobby-battle-btn-text" class="">ENTRAR NA BATALHA</span>
+</button>
+<button class="bg-[#1e2634] hover:bg-[#283244] border border-[#3b475a] text-slate-200 font-display font-medium py-2.5 px-3 rounded-xl text-xs" onclick="navigateTo('screen-map')">
           Ver Fases
         </button>
-      </div>
-    </div>
-
-    <!-- Quick Navigation Grid -->
-    <div class="grid grid-cols-4 gap-2.5 text-center text-[11px] font-display">
-      <div onclick="navigateTo('screen-classes')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition">
-        <div class="text-xl mb-1">🛡️</div>
-        <div class="text-slate-200">5 Classes</div>
-      </div>
-      <div onclick="navigateTo('screen-inventory')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition">
-        <div class="text-xl mb-1">🎒</div>
-        <div class="text-slate-200">Inventário</div>
-      </div>
-      <div onclick="navigateTo('screen-forge')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition">
-        <div class="text-xl mb-1">🔨</div>
-        <div class="text-slate-200">Forja +15</div>
-      </div>
-      <div onclick="navigateTo('screen-gacha')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-gold/40 cursor-pointer transition relative glow-gold">
-        <span class="absolute -top-1 -right-1 bg-crimson text-[9px] text-white px-1.5 rounded-full font-bold">x10</span>
-        <div class="text-xl mb-1">✨</div>
-        <div class="text-gold font-bold">Gacha</div>
-      </div>
-      <div onclick="navigateTo('screen-talents')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition">
-        <div class="text-xl mb-1">📜</div>
-        <div class="text-slate-200">Talentos</div>
-      </div>
-      <div onclick="navigateTo('screen-clan')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition">
-        <div class="text-xl mb-1">🏰</div>
-        <div class="text-slate-200">Clã & Raid</div>
-      </div>
-      <div onclick="navigateTo('screen-pvp')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition">
-        <div class="text-xl mb-1">⚔️</div>
-        <div class="text-slate-200">Arena PvP</div>
-      </div>
-      <div onclick="navigateTo('screen-bestiary')" class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition">
-        <div class="text-xl mb-1">📖</div>
-        <div class="text-slate-200">Grimório</div>
-      </div>
-    </div>
-
-    <!-- Active Events & Daily Quests -->
-    <div class="bg-[#121720] border border-[#242f40] rounded-xl p-3.5 space-y-2.5">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-display font-bold text-gold tracking-wide">Desafios Diários da Ordem</span>
-        <span class="text-[10px] text-slate-400 font-mono">Reset em 06h:42m</span>
-      </div>
-      <div class="space-y-2 text-xs">
-        <div class="bg-[#18202c] p-2 rounded-lg border border-[#2a374a] flex items-center justify-between">
-          <div>
-            <div class="font-medium text-slate-200">Derrotar 1 Chefe de Masmorra</div>
-            <div class="text-[10px] text-slate-400">Recompensa: 200 Cristais + 1 Frasco Astral</div>
+</div>
+</div>
+<!-- Quick Navigation Grid -->
+<div class="grid grid-cols-4 gap-2.5 text-center text-[11px] font-display">
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition" onclick="navigateTo('screen-classes')">
+<div class="text-xl mb-1">🛡️</div>
+<div class="text-slate-200">5 Classes</div>
+</div>
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition" onclick="navigateTo('screen-inventory')">
+<div class="text-xl mb-1">🎒</div>
+<div class="text-slate-200">Inventário</div>
+</div>
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition" onclick="navigateTo('screen-forge')">
+<div class="text-xl mb-1">🔨</div>
+<div class="text-slate-200">Forja +15</div>
+</div>
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-gold/40 cursor-pointer transition relative glow-gold" onclick="navigateTo('screen-gacha')">
+<span class="absolute -top-1 -right-1 bg-crimson text-[9px] text-white px-1.5 rounded-full font-bold">x10</span>
+<div class="text-xl mb-1">✨</div>
+<div class="text-gold font-bold">Gacha</div>
+</div>
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition relative" onclick="navigateTo('screen-talents')">
+<span class="hidden absolute -top-1 -right-1 bg-amber-500 text-[9px] text-black px-1.5 rounded-full font-bold" id="talent-points-badge">0</span>
+<div class="text-xl mb-1">📜</div>
+<div class="text-slate-200">Talentos</div>
+</div>
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition" onclick="navigateTo('screen-clan')">
+<div class="text-xl mb-1">🏰</div>
+<div class="text-slate-200">Clã &amp; Raid</div>
+</div>
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition" onclick="navigateTo('screen-pvp')">
+<div class="text-xl mb-1">⚔️</div>
+<div class="text-slate-200">Arena PvP</div>
+</div>
+<div class="bg-[#141a24] hover:bg-[#1c2432] p-2.5 rounded-xl border border-[#273244] cursor-pointer transition" onclick="navigateTo('screen-bestiary')">
+<div class="text-xl mb-1">📖</div>
+<div class="text-slate-200">Grimório</div>
+</div>
+</div>
+<!-- Active Events & Daily Quests -->
+<div class="bg-[#121720] border border-[#242f40] rounded-xl p-3.5 space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="text-xs font-display font-bold text-gold tracking-wide">Desafios Diários da Ordem</span>
+<span class="text-[10px] text-slate-400 font-mono">Energia: <span id="lobby-energy" class="">120/120</span> ⚡</span>
+</div>
+<div class="space-y-2 text-xs">
+<div class="bg-[#18202c] p-2.5 rounded-lg border border-[#2a374a] flex items-center justify-between">
+<div>
+<div class="font-medium text-slate-200">Bênção do Zênite (Diária)</div>
+<div class="text-[10px] text-slate-400">Recompensa: +1.000 Ouro e +100 Cristais</div>
+</div>
+<button class="bg-gold/20 hover:bg-gold/30 text-gold border border-gold/40 text-[10px] px-3 py-1 rounded font-display font-bold" id="btn-daily-blessing" onclick="claimDailyBlessing()">Coletar</button>
+</div>
+<div class="bg-[#18202c] p-2.5 rounded-lg border border-[#2a374a] flex items-center justify-between">
+<div>
+<div class="font-medium text-slate-200">Treino de Armamento</div>
+<div class="text-[10px] text-slate-400">Recompensa: +3 Poeiras Astrais de Forja</div>
+</div>
+<button class="bg-gold/20 hover:bg-gold/30 text-gold border border-gold/40 text-[10px] px-3 py-1 rounded font-display font-bold" id="btn-daily-forge-reward" onclick="claimDailyDust()">Coletar</button>
+</div>
+</div>
+</div>
+<!-- Quick Reset / Save Bar -->
+<div class="flex items-center justify-between text-[11px] p-2 bg-[#0c1017] rounded-xl border border-[#1f2837] text-slate-400">
+<span class="">💾 Progresso salvo automaticamente</span>
+<button class="text-red-400 hover:text-red-300 font-display" onclick="promptResetHero()">Reiniciar Herói</button>
+</div>
+</section>
+<!-- 2. TELA: BATALHA DINÂMICA (JOGÁVEL CONTRA OS 10 CHEFES) -->
+<section class="screen-container p-3 space-y-3" id="screen-battle">
+<!-- Boss Header -->
+<div class="bg-[#121722] border border-crimson/40 rounded-xl p-3 relative overflow-hidden shadow-lg">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-crimson/20 border border-crimson/40 text-crimson font-display font-bold text-[10px]" id="battle-stage-badge">FASE 1</span>
+<h2 class="font-display font-bold text-slate-100 text-sm" id="battle-boss-name">GORGOROTH, O CARNICEIRO</h2>
+</div>
+<div class="text-[10px] text-amber-300 font-display flex items-center gap-1 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/30" id="battle-boss-weakness">Fraqueza: Sagrado (+30%)</div>
+</div>
+<!-- Boss HP Bar -->
+<div class="space-y-1">
+<div class="flex justify-between text-[11px] font-mono">
+<span class="text-slate-400" id="boss-phase-badge">Fase 1: Carnificina</span>
+<span class="text-crimson font-bold" id="boss-hp-text">4.200 / 4.200 (100.0%)</span>
+</div>
+<div class="w-full h-3 bg-black/60 rounded-full border border-crimson/30 overflow-hidden relative">
+<div class="h-full bg-gradient-to-r from-red-700 via-crimson to-amber-500 transition-all duration-300" id="boss-hp-bar" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Boss Avatar & Telegraph Banner -->
+<div class="mt-2.5 flex items-center justify-center flex-col py-3 relative bg-gradient-to-b from-[#18202d] to-transparent rounded-lg border border-[#283547]">
+<div class="relative" id="dmg-spawn-point">
+<div class="text-5xl filter drop-shadow-[0_0_15px_rgba(229,62,62,0.6)]" id="battle-boss-icon">🧌</div>
+</div>
+<div class="hidden mt-2 px-3 py-1 bg-crimson/30 border border-crimson text-red-200 text-[10px] font-display font-bold rounded-full animate-pulse" id="telegraph-banner">
+          ⚠️ TELEGRAFANDO GOLPE MORTAL! (USE HABILIDADE DE CONTROLE/ESCUDO)
+        </div>
+<div class="text-[10px] text-slate-400 font-mono mt-1" id="boss-intent">IA: Foco na Vanguarda</div>
+</div>
+</div>
+<!-- Hero Status in Battle -->
+<div class="bg-[#121822] border border-gold/30 rounded-xl p-3 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-gold/10 border border-gold/40 flex items-center justify-center font-display font-bold text-gold text-xs" id="battle-hero-avatar">🛡️</div>
+<div>
+<div class="font-display font-bold text-gold text-xs"><span id="battle-hero-name" class="">Valerius</span> <span class="text-[10px] text-slate-400 font-sans font-normal">(Mitigação: <span id="battle-hero-mitig" class="">66%</span>)</span></div>
+<div class="text-[10px] text-slate-300" id="hero-status-text">Turno: 1 | Pronto</div>
+</div>
+</div>
+<div class="hidden text-[10px] bg-cyan-950/70 border border-cyan-400 text-cyan-200 px-2 py-0.5 rounded font-mono" id="shield-badge">
+          🛡️ Escudo: <span id="shield-val" class="">0</span>
+</div>
+</div>
+<!-- Hero HP & Resource Bars -->
+<div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+<div>
+<div class="flex justify-between text-slate-300 mb-0.5">
+<span class="">HP</span>
+<span id="hero-hp-text" class="">3.620 / 3.620</span>
+</div>
+<div class="h-2 bg-black/60 rounded-full border border-emerald-900/60 overflow-hidden">
+<div class="h-full bg-emerald-500 transition-all duration-300" id="hero-hp-bar" style="width: 100%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-slate-300 mb-0.5">
+<span id="hero-resource-name" class="">MANA</span>
+<span id="hero-mana-text" class="">320 / 320</span>
+</div>
+<div class="h-2 bg-black/60 rounded-full border border-blue-900/60 overflow-hidden">
+<div class="h-full bg-blue-500 transition-all duration-300" id="hero-mana-bar" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Battle Skills Grid (Dynamic by Class) -->
+<div class="grid grid-cols-3 gap-2 text-left" id="battle-skills-container"><button class="bg-[#161f2c] hover:bg-[#1e2a3c] border border-gold/40 p-2 rounded-xl transition flex flex-col justify-between h-20 shadow text-left">
+          <div class="flex justify-between w-full text-[10px] text-gold font-display font-bold">
+            <span class="truncate">Golpe Solar</span>
+            <span class="text-slate-400 font-mono text-[9px]">+40 MANA</span>
           </div>
-          <button onclick="navigateTo('screen-battle')" class="bg-gold/20 hover:bg-gold/30 text-gold border border-gold/40 text-[10px] px-2.5 py-1 rounded font-display font-bold">Ir</button>
-        </div>
-        <div class="bg-[#18202c] p-2 rounded-lg border border-[#2a374a] flex items-center justify-between">
-          <div>
-            <div class="font-medium text-slate-200">Refinar 1 Equipamento na Forja</div>
-            <div class="text-[10px] text-slate-400">Recompensa: 5.000 Ouro + 2 Poeiras de Mithril</div>
+          <div class="text-[10px] text-slate-300 leading-tight line-clamp-2">Dano Sagrado e gera +40 Mana.</div>
+          <div class="text-[9px] text-emerald-400 font-mono">⚔️ ATAQUE</div>
+        </button><button class="bg-[#161f2c] hover:bg-[#1e2a3c] border border-gold/40 p-2 rounded-xl transition flex flex-col justify-between h-20 shadow text-left">
+          <div class="flex justify-between w-full text-[10px] text-gold font-display font-bold">
+            <span class="truncate">Julgamento Radiante</span>
+            <span class="text-slate-400 font-mono text-[9px]">70 MANA</span>
           </div>
-          <button onclick="navigateTo('screen-forge')" class="bg-gold/20 hover:bg-gold/30 text-gold border border-gold/40 text-[10px] px-2.5 py-1 rounded font-display font-bold">Forjar</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. TELA: BATALHA DE CHEFE MALFATHOR (JOGÁVEL) -->
-  <section id="screen-battle" class="screen-container p-3 space-y-3">
-    <!-- Boss Header -->
-    <div class="bg-[#121722] border border-crimson/40 rounded-xl p-3 relative overflow-hidden shadow-lg">
-      <div class="flex items-center justify-between mb-1.5">
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded bg-crimson/20 border border-crimson/40 text-crimson font-display font-bold text-[10px]">FASE 10</span>
-          <h2 class="font-display font-bold text-slate-100 text-sm">MALFATHOR, O DEVORADOR</h2>
-        </div>
-        <div class="text-[10px] text-amber-300 font-display flex items-center gap-1 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/30">
-          ☀️ Fraqueza: Luz (+50%)
-        </div>
-      </div>
-      
-      <!-- Boss HP Bar -->
-      <div class="space-y-1">
-        <div class="flex justify-between text-[11px] font-mono">
-          <span id="boss-phase-badge" class="text-slate-400">Fase 1: Chamas Abissais</span>
-          <span id="boss-hp-text" class="text-crimson font-bold">1.200.000 / 1.200.000 (100%)</span>
-        </div>
-        <div class="w-full h-3 bg-black/60 rounded-full border border-crimson/30 overflow-hidden relative">
-          <div id="boss-hp-bar" class="h-full bg-gradient-to-r from-red-700 via-crimson to-amber-500 transition-all duration-300" style="width: 100%;"></div>
-        </div>
-      </div>
-
-      <!-- Boss Avatar & Telegraph Banner -->
-      <div class="mt-2.5 flex items-center justify-center flex-col py-3 relative bg-gradient-to-b from-[#18202d] to-transparent rounded-lg border border-[#283547]">
-        <div id="dmg-spawn-point" class="relative">
-          <div class="text-5xl filter drop-shadow-[0_0_15px_rgba(229,62,62,0.6)]">🐉</div>
-        </div>
-        <div id="telegraph-banner" class="hidden mt-2 px-3 py-1 bg-crimson/30 border border-crimson text-red-200 text-[10px] font-display font-bold rounded-full animate-pulse">
-          ⚠️ TELEGRAFANDO: SOPRO DE MAGMA (USE GOLPE RADIANTE!)
-        </div>
-        <div id="boss-intent" class="text-[10px] text-slate-400 font-mono mt-1">IA: Foco na Vanguarda (Valerius)</div>
-      </div>
-    </div>
-
-    <!-- Hero Status in Battle -->
-    <div class="bg-[#121822] border border-gold/30 rounded-xl p-3 space-y-2">
-      <div class="flex items-center justify-between text-xs">
-        <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded bg-gold/10 border border-gold/40 flex items-center justify-center font-display font-bold text-gold text-xs">V</div>
-          <div>
-            <div class="font-display font-bold text-gold text-xs">Valerius <span class="text-[10px] text-slate-400 font-sans font-normal">(Mitigação: 69.1%)</span></div>
-            <div id="hero-status-text" class="text-[10px] text-slate-300">Turno: 1 | PA: 3/3</div>
+          <div class="text-[10px] text-slate-300 leading-tight line-clamp-2">Dano alto. Interrompe conjuração do chefe!</div>
+          <div class="text-[9px] text-blue-400 font-mono">⚠️ INTERROMPE</div>
+        </button><button class="bg-[#161f2c] hover:bg-[#1e2a3c] border border-gold/40 p-2 rounded-xl transition flex flex-col justify-between h-20 shadow text-left">
+          <div class="flex justify-between w-full text-[10px] text-gold font-display font-bold">
+            <span class="truncate">Bastião Inquebrável</span>
+            <span class="text-slate-400 font-mono text-[9px]">110 MANA</span>
           </div>
-        </div>
-        <div id="shield-badge" class="hidden text-[10px] bg-cyan-950/70 border border-cyan-400 text-cyan-200 px-2 py-0.5 rounded font-mono">
-          🛡️ Escudo: <span id="shield-val">0</span>
-        </div>
-      </div>
-
-      <!-- Hero HP & Mana Bars -->
-      <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-        <div>
-          <div class="flex justify-between text-slate-300 mb-0.5">
-            <span>HP</span>
-            <span id="hero-hp-text">184.200 / 184.200</span>
-          </div>
-          <div class="h-2 bg-black/60 rounded-full border border-emerald-900/60 overflow-hidden">
-            <div id="hero-hp-bar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 100%;"></div>
-          </div>
-        </div>
-        <div>
-          <div class="flex justify-between text-slate-300 mb-0.5">
-            <span>MANA</span>
-            <span id="hero-mana-text">4.850 / 4.850</span>
-          </div>
-          <div class="h-2 bg-black/60 rounded-full border border-blue-900/60 overflow-hidden">
-            <div id="hero-mana-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 100%;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Battle Skills Grid (Interactive) -->
-    <div class="grid grid-cols-3 gap-2 text-left">
-      <button onclick="castSkill('solar')" class="bg-[#161f2c] hover:bg-[#1e2a3c] border border-gold/40 p-2 rounded-xl transition flex flex-col justify-between h-20 shadow">
-        <div class="flex justify-between w-full text-[10px] text-gold font-display font-bold">
-          <span>⚔️ Solar</span>
-          <span class="text-slate-400">1 PA</span>
-        </div>
-        <div class="text-[10px] text-slate-300 leading-tight">Dano Fís.+Sagrado. +80 Mana.</div>
-        <div class="text-[9px] text-emerald-400 font-mono">+80 MP</div>
-      </button>
-
-      <button onclick="castSkill('radiant')" class="bg-[#161f2c] hover:bg-[#1e2a3c] border border-amber-400/40 p-2 rounded-xl transition flex flex-col justify-between h-20 shadow">
-        <div class="flex justify-between w-full text-[10px] text-amber-300 font-display font-bold">
-          <span>☀️ Radiante</span>
-          <span class="text-slate-400">2 PA</span>
-        </div>
-        <div class="text-[10px] text-slate-300 leading-tight">Interrompe golpe do Chefe!</div>
-        <div class="text-[9px] text-blue-400 font-mono">90 MP</div>
-      </button>
-
-      <button onclick="castSkill('bastion')" class="bg-[#161f2c] hover:bg-[#1e2a3c] border border-cyan-400/40 p-2 rounded-xl transition flex flex-col justify-between h-20 shadow">
-        <div class="flex justify-between w-full text-[10px] text-cyan-300 font-display font-bold">
-          <span>🛡️ Bastião</span>
-          <span class="text-slate-400">2 PA</span>
-        </div>
-        <div class="text-[10px] text-slate-300 leading-tight">+46.000 Escudo Sagrado.</div>
-        <div class="text-[9px] text-blue-400 font-mono">140 MP</div>
-      </button>
-    </div>
-
-    <!-- Ultimate Button -->
-    <button onclick="castSkill('ultimate')" class="w-full bg-gradient-to-r from-amber-600 via-gold to-amber-500 hover:from-amber-500 hover:to-gold text-abyss font-display font-black py-3 px-4 rounded-xl border border-gold-light shadow-xl flex items-center justify-between text-xs tracking-wider">
-      <span class="flex items-center gap-2">⚡ IRA DO ZÊNITE (SUPREMA)</span>
-      <span class="text-[10px] bg-abyss/40 text-gold-light px-2 py-0.5 rounded font-mono">340% SAGRADO (+CURA)</span>
-    </button>
-
-    <!-- Combat Log -->
-    <div class="bg-[#0b0f15] border border-[#222b3a] rounded-xl p-2.5 font-mono text-[10px] text-slate-400 space-y-1 max-h-24 overflow-y-auto custom-scrollbar" id="combat-log">
-      <div class="text-gold">⚔️ O embate contra Malfathor começou! Escolha sua habilidade.</div>
-    </div>
-  </section>
-
-  <!-- 3. TELA: SELEÇÃO DE CLASSES -->
-  <section id="screen-classes" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">As 5 Classes da Ordem</h2>
-      <p class="text-xs text-slate-400">Selecione uma classe para inspecionar atributos, proficiência e papéis táticos.</p>
-    </div>
-
-    <div class="space-y-3">
-      <!-- 1. Paladino -->
-      <div class="bg-[#141b25] border border-gold/50 rounded-xl p-3 relative">
-        <span class="absolute top-3 right-3 text-[10px] bg-gold/20 text-gold px-2 py-0.5 rounded font-display font-bold">Ativo no Grupo</span>
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-10 h-10 rounded-lg bg-gold/10 border border-gold flex items-center justify-center text-xl">🛡️</div>
-          <div>
-            <h3 class="font-display font-bold text-gold text-sm">Paladino (Valerius)</h3>
-            <div class="text-[11px] text-slate-300">Tanque Suporte • Poder Sagrado & Barreira</div>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-[10px] font-mono bg-[#0e131b] p-2 rounded-lg border border-[#263242]">
-          <div>HP: <span class="text-slate-200">108.500</span></div>
-          <div>DEF: <span class="text-slate-200">8.940</span></div>
-          <div>ATK: <span class="text-amber-400">4.580 (Misto)</span></div>
-        </div>
-      </div>
-
-      <!-- 2. Guerreiro -->
-      <div class="bg-[#141b25] border border-[#283446] rounded-xl p-3">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-10 h-10 rounded-lg bg-red-950/40 border border-red-500/40 flex items-center justify-center text-xl">⚔️</div>
-          <div>
-            <h3 class="font-display font-bold text-slate-200 text-sm">Guerreiro (Gorgor - Juggernaut)</h3>
-            <div class="text-[11px] text-slate-300">Tanque Físico • Provocação & Fúria</div>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-[10px] font-mono bg-[#0e131b] p-2 rounded-lg border border-[#263242]">
-          <div>HP: <span class="text-slate-200">124.000</span></div>
-          <div>DEF: <span class="text-slate-200">7.620</span></div>
-          <div>ATK: <span class="text-red-400">4.950</span></div>
-        </div>
-      </div>
-
-      <!-- 3. Mago -->
-      <div class="bg-[#141b25] border border-[#283446] rounded-xl p-3">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-10 h-10 rounded-lg bg-indigo-950/40 border border-indigo-500/40 flex items-center justify-center text-xl">🔮</div>
-          <div>
-            <h3 class="font-display font-bold text-slate-200 text-sm">Mago Arcano (Azael)</h3>
-            <div class="text-[11px] text-slate-300">DPS Mágico • Dano em Área & Singularidade</div>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-[10px] font-mono bg-[#0e131b] p-2 rounded-lg border border-[#263242]">
-          <div>HP: <span class="text-slate-200">61.200</span></div>
-          <div>DEF: <span class="text-slate-200">1.820</span></div>
-          <div>ATK: <span class="text-purple-400">10.820</span></div>
-        </div>
-      </div>
-
-      <!-- 4. Assassino -->
-      <div class="bg-[#141b25] border border-[#283446] rounded-xl p-3">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-10 h-10 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-center text-xl">🗡️</div>
-          <div>
-            <h3 class="font-display font-bold text-slate-200 text-sm">Assassino (Kaelen)</h3>
-            <div class="text-[11px] text-slate-300">DPS Crítico • Sangria & Furtividade</div>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-[10px] font-mono bg-[#0e131b] p-2 rounded-lg border border-[#263242]">
-          <div>HP: <span class="text-slate-200">73.100</span></div>
-          <div>DEF: <span class="text-slate-200">2.980</span></div>
-          <div>ATK: <span class="text-emerald-400">11.450</span></div>
-        </div>
-      </div>
-
-      <!-- 5. Arqueiro -->
-      <div class="bg-[#141b25] border border-[#283446] rounded-xl p-3">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-10 h-10 rounded-lg bg-amber-950/40 border border-amber-500/40 flex items-center justify-center text-xl">🏹</div>
-          <div>
-            <h3 class="font-display font-bold text-slate-200 text-sm">Arqueiro (Lyra)</h3>
-            <div class="text-[11px] text-slate-300">DPS Longo Alcance • Supressão & Precisão</div>
-          </div>
-        </div>
-        <div class="grid grid-cols-3 gap-2 text-[10px] font-mono bg-[#0e131b] p-2 rounded-lg border border-[#263242]">
-          <div>HP: <span class="text-slate-200">69.800</span></div>
-          <div>DEF: <span class="text-slate-200">2.740</span></div>
-          <div>ATK: <span class="text-amber-400">10.280</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. TELA: INVENTÁRIO & EQUIPAMENTOS -->
-  <section id="screen-inventory" class="screen-container p-4 space-y-4">
-    <div class="flex justify-between items-center border-b border-gold/30 pb-2">
-      <div>
-        <h2 class="text-lg font-display font-bold text-gold">Inventário & Equipamentos</h2>
-        <div class="text-xs text-slate-400">Equipamento de Valerius (5 Slots)</div>
-      </div>
-      <button onclick="showToast('Todos os equipamentos foram otimizados!')" class="text-[11px] bg-gold/20 border border-gold/40 text-gold px-2.5 py-1 rounded font-display font-bold">Auto-Equipar</button>
-    </div>
-
-    <!-- The 5 Gear Slots -->
-    <div class="space-y-2.5">
-      <!-- Elmo -->
-      <div class="bg-[#131922] border border-amber-500/40 p-3 rounded-xl flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-lg bg-[#1a2332] border border-amber-400 flex items-center justify-center text-xl">👑</div>
-          <div>
-            <div class="font-display font-bold text-gold text-xs">Elmo da Aurora Radiante +12</div>
-            <div class="text-[10px] text-slate-300">+28.400 HP • +15% Res. Fogo</div>
-          </div>
-        </div>
-        <button onclick="navigateTo('screen-forge')" class="text-[10px] bg-[#1d2737] hover:bg-[#273449] px-2.5 py-1 rounded border border-[#37475f] text-slate-200 font-display">Refinar</button>
-      </div>
-
-      <!-- Peitoral -->
-      <div class="bg-[#131922] border border-amber-500/40 p-3 rounded-xl flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-lg bg-[#1a2332] border border-amber-400 flex items-center justify-center text-xl">🛡️</div>
-          <div>
-            <div class="font-display font-bold text-gold text-xs">Peitoral do Bastião Sagrado +15</div>
-            <div class="text-[10px] text-slate-300">+4.200 DEF Física • +3.100 DEF Mágica</div>
-          </div>
-        </div>
-        <button onclick="navigateTo('screen-forge')" class="text-[10px] bg-[#1d2737] hover:bg-[#273449] px-2.5 py-1 rounded border border-[#37475f] text-slate-200 font-display">Refinar</button>
-      </div>
-
-      <!-- Calças -->
-      <div class="bg-[#131922] border border-purple-500/40 p-3 rounded-xl flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-lg bg-[#1a2332] border border-purple-400 flex items-center justify-center text-xl">👖</div>
-          <div>
-            <div class="font-display font-bold text-purple-300 text-xs">Grevas do Templário Caído +10</div>
-            <div class="text-[10px] text-slate-300">+19.500 HP • +8% Evasão</div>
-          </div>
-        </div>
-        <button onclick="navigateTo('screen-forge')" class="text-[10px] bg-[#1d2737] hover:bg-[#273449] px-2.5 py-1 rounded border border-[#37475f] text-slate-200 font-display">Refinar</button>
-      </div>
-
-      <!-- Botas -->
-      <div class="bg-[#131922] border border-purple-500/40 p-3 rounded-xl flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-lg bg-[#1a2332] border border-purple-400 flex items-center justify-center text-xl">👢</div>
-          <div>
-            <div class="font-display font-bold text-purple-300 text-xs">Botas da Marcha Solar +11</div>
-            <div class="text-[10px] text-slate-300">+35 Velocidade de Turno (SPD)</div>
-          </div>
-        </div>
-        <button onclick="navigateTo('screen-forge')" class="text-[10px] bg-[#1d2737] hover:bg-[#273449] px-2.5 py-1 rounded border border-[#37475f] text-slate-200 font-display">Refinar</button>
-      </div>
-
-      <!-- Arma Primária -->
-      <div class="bg-[#131922] border border-gold p-3 rounded-xl flex items-center justify-between glow-gold">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-lg bg-[#1a2332] border border-gold flex items-center justify-center text-xl">🗡️</div>
-          <div>
-            <div class="font-display font-bold text-gold text-xs flex items-center gap-1">Montante do Zênite [Mítico] +15</div>
-            <div class="text-[10px] text-amber-200">+3.450 ATK • +38% Dano Crítico Sagrado</div>
-          </div>
-        </div>
-        <button onclick="navigateTo('screen-forge')" class="text-[10px] bg-gold/20 hover:bg-gold/30 px-2.5 py-1 rounded border border-gold text-gold font-display font-bold">Máximo</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. TELA: MAPA DAS 10 FASES & CHEFES -->
-  <section id="screen-map" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">Trilha das 10 Masmorras</h2>
-      <p class="text-xs text-slate-400">Avance derrotando os 10 Lordes Abissais de Valíria.</p>
-    </div>
-
-    <div class="space-y-2 text-xs">
-      <div class="bg-[#131822] p-3 rounded-xl border border-emerald-500/30 flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-emerald-400 text-xs">Fase 1: Cripta das Cinzas (Concluída)</div>
-          <div class="text-[10px] text-slate-400">Chefe: Gorgoroth, o Carniceiro</div>
-        </div>
-        <span class="text-emerald-400 font-bold">✓ 3★</span>
-      </div>
-
-      <div class="bg-[#131822] p-3 rounded-xl border border-emerald-500/30 flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-emerald-400 text-xs">Fase 2: Pântano de Sombras (Concluída)</div>
-          <div class="text-[10px] text-slate-400">Chefe: Vespera, a Matriarca da Noite</div>
-        </div>
-        <span class="text-emerald-400 font-bold">✓ 3★</span>
-      </div>
-
-      <div class="bg-[#131822] p-3 rounded-xl border border-emerald-500/30 flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-emerald-400 text-xs">Fase 3: Pico do Vento Gélido (Concluída)</div>
-          <div class="text-[10px] text-slate-400">Chefe: Kryos, o Colosso de Gelo</div>
-        </div>
-        <span class="text-emerald-400 font-bold">✓ 3★</span>
-      </div>
-
-      <div class="bg-[#131822] p-3 rounded-xl border border-emerald-500/30 flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-emerald-400 text-xs">Fases 4 a 9: Catacumbas até Tártaro</div>
-          <div class="text-[10px] text-slate-400">Belial, Sylvanna, Morvath e outros derrotados</div>
-        </div>
-        <span class="text-emerald-400 font-bold">✓ 3★</span>
-      </div>
-
-      <!-- FASE 10 ATIVA -->
-      <div class="bg-[#1d161d] p-3 rounded-xl border border-crimson shadow-lg flex items-center justify-between relative overflow-hidden">
-        <div class="absolute -right-4 -top-4 w-20 h-20 bg-crimson/20 blur-xl pointer-events-none"></div>
-        <div>
-          <div class="font-display font-bold text-red-400 text-xs flex items-center gap-1.5">
-            <span class="animate-ping w-2 h-2 rounded-full bg-red-500 inline-block"></span>
-            Fase 10: Antro de Enxofre [CONFRONTO FINAL]
-          </div>
-          <div class="text-[10px] text-slate-300">Chefe: Malfathor, o Devorador (Fogo/Caos)</div>
-        </div>
-        <button onclick="navigateTo('screen-battle')" class="bg-crimson hover:bg-red-600 text-white font-display font-bold text-[10px] px-3 py-1.5 rounded-lg border border-red-300 shadow">
-          LUTAR
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. TELA: FORJA & APRIMORAMENTO (+1 A +15) -->
-  <section id="screen-forge" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">Bigorna Arcana dos Ancestrais</h2>
-      <p class="text-xs text-slate-400">Aprimore equipamentos até +15 com Poeira Astral e Ouro.</p>
-    </div>
-
-    <div class="bg-[#131924] border border-gold/40 rounded-xl p-4 text-center space-y-3">
-      <div class="w-16 h-16 rounded-2xl bg-[#1b2434] border-2 border-gold mx-auto flex items-center justify-center text-3xl shadow-lg">
+          <div class="text-[10px] text-slate-300 leading-tight line-clamp-2">Ergue barreira absorvente de dano sagrado.</div>
+          <div class="text-[9px] text-blue-400 font-mono">🛡️ ESCUDO</div>
+        </button></div>
+<!-- Ultimate Button (Dynamic) -->
+<button class="w-full bg-gradient-to-r from-amber-600 via-gold to-amber-500 hover:from-amber-500 hover:to-gold text-abyss font-display font-black py-3 px-4 rounded-xl border border-gold-light shadow-xl flex items-center justify-between text-xs tracking-wider" id="btn-cast-ultimate" onclick="castHeroSkill(3)">
+<span class="flex items-center gap-2" id="ult-btn-name">⚡ IRA DO ZÊNITE (SUPREMA)</span>
+<span class="text-[10px] bg-abyss/40 text-gold-light px-2 py-0.5 rounded font-mono" id="ult-btn-desc">180 MANA • SUPREMA</span>
+</button>
+<!-- Combat Log -->
+<div class="bg-[#0b0f15] border border-[#222b3a] rounded-xl p-2.5 font-mono text-[10px] text-slate-400 space-y-1 max-h-28 overflow-y-auto custom-scrollbar" id="combat-log"><div class="text-gold font-bold">⚔️ Confronto contra Gorgoroth, o Carniceiro iniciado!</div><div class="text-slate-400 text-[9px]">Aos 30% entra em Fúria (+40% ATK). Canaliza Decapitar!</div></div>
+</section>
+<!-- 3. TELA: SELEÇÃO & DETALHES DE CLASSES -->
+<section class="screen-container p-4 space-y-4 active" id="screen-classes">
+<div class="border-b border-gold/30 pb-2">
+<h2 class="text-lg font-display font-bold text-gold">As 5 Classes da Ordem do Zênite</h2>
+<p class="text-xs text-slate-400">Inspecione os papéis táticos, fórmulas de escalonamento e estilos de jogo.</p>
+</div>
+<div class="space-y-3" id="classes-list-container">
+<!-- As 5 classes renderizadas -->
+</div>
+</section>
+<!-- 4. TELA: INVENTÁRIO & EQUIPAMENTOS -->
+<section class="screen-container p-4 space-y-4" id="screen-inventory">
+<div class="flex justify-between items-center border-b border-gold/30 pb-2">
+<div>
+<h2 class="text-lg font-display font-bold text-gold">Inventário da Ordem</h2>
+<div class="text-xs text-slate-400">5 Slots de Equipamento Ativo</div>
+</div>
+<button class="text-[11px] bg-gold/20 hover:bg-gold/30 border border-gold/40 text-gold px-2.5 py-1 rounded font-display font-bold" onclick="autoEquipBest()">Otimizar Todos</button>
+</div>
+<!-- The 5 Gear Slots -->
+<div class="space-y-2.5" id="equipped-slots-container">
+<!-- Preenchido dinamicamente com os 5 equipamentos salvos -->
+</div>
+<div class="pt-2">
+<div class="text-xs font-display font-bold text-gold mb-2 flex items-center justify-between">
+<span class="">Mochila de Itens &amp; Materiais</span>
+<span class="text-[10px] text-slate-400">Poeira Astral: <span class="text-gold font-mono" id="inv-dust-count">10</span> ✨</span>
+</div>
+<div class="grid grid-cols-2 gap-2 text-xs" id="backpack-items-container">
+<!-- Itens acumulados -->
+</div>
+</div>
+</section>
+<!-- 5. TELA: MAPA DAS 10 FASES & CHEFES -->
+<section class="screen-container p-4 space-y-4" id="screen-map">
+<div class="border-b border-gold/30 pb-2">
+<h2 class="text-lg font-display font-bold text-gold">Trilha das 10 Masmorras de Valíria</h2>
+<p class="text-xs text-slate-400">Selecione qualquer masmorra desbloqueada para desafiar o lorde sombrio.</p>
+</div>
+<div class="space-y-2 text-xs" id="stages-list-container">
+<!-- As 10 fases são renderizadas dinamicamente aqui -->
+</div>
+</section>
+<!-- 6. TELA: FORJA & APRIMORAMENTO (+1 A +15) -->
+<section class="screen-container p-4 space-y-4" id="screen-forge">
+<div class="border-b border-gold/30 pb-2 flex justify-between items-center">
+<div>
+<h2 class="text-lg font-display font-bold text-gold">Bigorna Arcana dos Ancestrais</h2>
+<p class="text-xs text-slate-400">Aprimore equipamentos até +15 com Ouro e Poeira Astral.</p>
+</div>
+<div class="text-right text-[11px] font-mono">
+<div class="text-amber-400">🪙 <span id="forge-gold-display" class="">0</span></div>
+<div class="text-cyan-300">✨ <span id="forge-dust-display" class="">0</span> Poeiras</div>
+</div>
+</div>
+<div class="bg-[#131924] border border-gold/40 rounded-xl p-4 text-center space-y-3">
+<div class="w-16 h-16 rounded-2xl bg-[#1b2434] border-2 border-gold mx-auto flex items-center justify-center text-3xl shadow-lg" id="forge-target-icon">
         🗡️
       </div>
-      <div>
-        <h3 class="font-display font-bold text-gold text-sm">Montante do Zênite [Mítico]</h3>
-        <div class="text-xs text-slate-300 font-mono">Nível Atual: <span class="text-gold font-bold">+14</span> ➔ <span class="text-emerald-400 font-bold">+15</span></div>
-      </div>
-
-      <div class="bg-[#0b0e14] p-3 rounded-lg border border-[#253244] text-xs font-mono grid grid-cols-2 gap-2 text-left">
-        <div>Taxa de Sucesso: <span class="text-amber-400 font-bold">20%</span> (Protegido)</div>
-        <div>Custo: <span class="text-amber-300 font-bold">12.000 Ouro</span></div>
-        <div>ATK Atual: <span class="text-slate-300">3.200</span></div>
-        <div>Novo ATK: <span class="text-emerald-400">+3.450 (+250)</span></div>
-      </div>
-
-      <button onclick="forgeItem()" class="w-full bg-gradient-to-r from-amber-600 to-gold hover:from-amber-500 hover:to-gold-light text-abyss font-display font-black py-2.5 rounded-xl border border-gold text-xs shadow-lg">
-        FORJAR APRIMORAMENTO (+15)
+<div>
+<h3 class="font-display font-bold text-gold text-sm" id="forge-target-name">Arma da Ordem</h3>
+<div class="text-xs text-slate-300 font-mono">
+          Refino Atual: <span class="text-gold font-bold" id="forge-current-level">+0</span> ➔ <span class="text-emerald-400 font-bold" id="forge-next-level">+1</span>
+</div>
+</div>
+<!-- Item Selector Dropdown for Forge -->
+<div class="text-left">
+<label class="text-[10px] text-slate-400 font-display block mb-1">Escolha o Equipamento para Refinar:</label>
+<select class="w-full bg-[#0b0e14] border border-[#2d394b] text-slate-200 text-xs rounded-lg p-2 font-serif focus:outline-none focus:border-gold" id="forge-select-slot" onchange="updateForgePreview()">
+<option value="weapon">Arma Primária</option>
+<option value="helmet">Elmo Divino</option>
+<option value="chest">Peitoral de Batalha</option>
+<option value="legs">Grevas Protetoras</option>
+<option value="boots">Botas de Agilidade</option>
+</select>
+</div>
+<div class="bg-[#0b0e14] p-3 rounded-lg border border-[#253244] text-xs font-mono grid grid-cols-2 gap-2 text-left">
+<div class="">Taxa de Sucesso: <span class="text-amber-400 font-bold" id="forge-rate">100%</span></div>
+<div class="">Custo em Ouro: <span class="text-amber-300 font-bold" id="forge-cost-gold">500</span></div>
+<div class="">Poeira Necessária: <span class="text-cyan-300 font-bold" id="forge-cost-dust">1</span></div>
+<div class="">Bônus por Nível: <span class="text-emerald-400 font-bold" id="forge-stat-bonus">+12% Stats</span></div>
+</div>
+<button class="w-full bg-gradient-to-r from-amber-600 to-gold hover:from-amber-500 hover:to-gold-light text-abyss font-display font-black py-2.5 rounded-xl border border-gold text-xs shadow-lg" onclick="attemptForgeUpgrade()">
+        FORJAR APRIMORAMENTO
       </button>
-    </div>
-  </section>
-
-  <!-- 7. TELA: INVOCAÇÃO & GACHA (ECOS ASTRAIS) -->
-  <section id="screen-gacha" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">Santuário dos Ecos Primordiais</h2>
-      <p class="text-xs text-slate-400">Invoque heróis e relíquias míticas com Cristais Astrais.</p>
-    </div>
-
-    <div class="relative rounded-2xl overflow-hidden border border-gold/40 p-4 bg-gradient-to-b from-[#181a2e] to-[#0c0f18] text-center space-y-3">
-      <div class="text-[10px] font-display uppercase tracking-widest text-gold">Banner de Evento: Luz do Eclipse</div>
-      <div class="text-4xl my-2">✨⚔️✨</div>
-      <h3 class="font-display font-black text-slate-100 text-lg">Valerius: O Julgamento Divino (5★ Mítico)</h3>
-      <p class="text-xs text-slate-300">Taxa aumentada de heróis Sagrados e Montantes Míticos.</p>
-      
-      <div class="flex items-center justify-center gap-3 pt-2">
-        <button onclick="pullGacha(1)" class="bg-[#1e2738] hover:bg-[#2b374d] text-slate-100 border border-[#3b4b66] font-display font-bold text-xs py-2 px-3.5 rounded-xl">
+</div>
+</section>
+<!-- 7. TELA: SANTUÁRIO GACHA (INVOCAÇÃO) -->
+<section class="screen-container p-4 space-y-4" id="screen-gacha">
+<div class="border-b border-gold/30 pb-2 flex justify-between items-center">
+<div>
+<h2 class="text-lg font-display font-bold text-gold">Santuário dos Ecos Primordiais</h2>
+<p class="text-xs text-slate-400">Invoque heróis, bênçãos e relíquias míticas.</p>
+</div>
+<div class="text-xs font-mono text-cyan-400 bg-[#141c26] px-2.5 py-1 rounded border border-[#283548]">
+        💎 <span id="gacha-gems-display" class="">300</span> Cristais
+      </div>
+</div>
+<div class="relative rounded-2xl overflow-hidden border border-gold/40 p-4 bg-gradient-to-b from-[#181a2e] to-[#0c0f18] text-center space-y-3">
+<div class="text-[10px] font-display uppercase tracking-widest text-gold">Banner Cósmico: Julgamento das Estrelas</div>
+<div class="text-4xl my-2">✨⚔️💎</div>
+<h3 class="font-display font-black text-slate-100 text-base">Invocação de Relíquias e Ecos Astrais</h3>
+<p class="text-xs text-slate-300">Garante ouro, fragmentos míticos e poeiras de refino para a Forja Ancestral.</p>
+<div class="flex items-center justify-center gap-3 pt-2">
+<button class="bg-[#1e2738] hover:bg-[#2b374d] text-slate-100 border border-[#3b4b66] font-display font-bold text-xs py-2 px-3.5 rounded-xl" onclick="executeGacha(1)">
           Invocação x1 (100 💎)
         </button>
-        <button onclick="pullGacha(10)" class="bg-gradient-to-r from-gold to-amber-500 text-abyss font-display font-black text-xs py-2 px-4 rounded-xl border border-gold-light shadow-lg">
+<button class="bg-gradient-to-r from-gold to-amber-500 text-abyss font-display font-black text-xs py-2 px-4 rounded-xl border border-gold-light shadow-lg" onclick="executeGacha(10)">
           Invocação x10 (900 💎)
         </button>
-      </div>
-    </div>
-
-    <!-- Gacha Results Container -->
-    <div id="gacha-results" class="hidden bg-[#10151f] border border-gold/40 rounded-xl p-3 space-y-2">
-      <div class="font-display font-bold text-gold text-xs">Resultado dos Ecos Astrais:</div>
-      <div id="gacha-grid" class="grid grid-cols-5 gap-1.5 text-center text-xs"></div>
-    </div>
-  </section>
-
-  <!-- 8. TELA: ÁRVORE DE TALENTOS -->
-  <section id="screen-talents" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">Árvore de Talentos: Paladino</h2>
-      <p class="text-xs text-slate-400">Pontos disponíveis: <span class="text-gold font-bold">4</span></p>
-    </div>
-
-    <div class="space-y-2.5 text-xs">
-      <div class="bg-[#141b25] border border-gold/40 p-3 rounded-xl flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-gold">Aura da Aurora (Tier 1)</div>
-          <div class="text-[10px] text-slate-300">+15% Dano Sagrado contra chefes de Ruína.</div>
-        </div>
-        <button onclick="showToast('Talento Aura da Aurora aprimorado!')" class="bg-gold/20 border border-gold text-gold text-[10px] px-2.5 py-1 rounded font-bold font-display">Aprender</button>
-      </div>
-
-      <div class="bg-[#141b25] border border-gold/40 p-3 rounded-xl flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-gold">Bastião Inquebrável (Tier 2)</div>
-          <div class="text-[10px] text-slate-300">Escudos agora refletem 20% do dano mitigado.</div>
-        </div>
-        <button onclick="showToast('Talento Bastião Inquebrável aprimorado!')" class="bg-gold/20 border border-gold text-gold text-[10px] px-2.5 py-1 rounded font-bold font-display">Aprender</button>
-      </div>
-
-      <div class="bg-[#141b25] border border-purple-500/40 p-3 rounded-xl flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-purple-300">Mestria Cósmica (Tier 3)</div>
-          <div class="text-[10px] text-slate-300">Reduz o tempo de recarga da Suprema em 1 turno.</div>
-        </div>
-        <button onclick="showToast('Talento Mestria Cósmica aprimorado!')" class="bg-purple-900/40 border border-purple-400 text-purple-200 text-[10px] px-2.5 py-1 rounded font-bold font-display">Aprender</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 9. TELA: CLÃ & RAIDS COOPERATIVAS -->
-  <section id="screen-clan" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">Clã: Ordem do Zênite [Nv. 8]</h2>
-      <p class="text-xs text-slate-400">Membros: 28/30 • Ranking: #4 Global</p>
-    </div>
-
-    <div class="bg-[#151c27] border border-crimson/40 rounded-xl p-3.5 space-y-2">
-      <div class="flex justify-between items-center text-xs">
-        <span class="font-display font-bold text-red-300">Raid Semanal: Belial, o Behemoth</span>
-        <span class="text-[10px] text-slate-400">Termina em 2 dias</span>
-      </div>
-      <div class="text-[11px] text-slate-300 font-mono">HP do Chefe Mundial: 42.800.000 / 100.000.000</div>
-      <div class="w-full h-2.5 bg-black/60 rounded-full border border-red-950 overflow-hidden">
-        <div class="h-full bg-crimson" style="width: 42.8%;"></div>
-      </div>
-      <button onclick="showToast('Você desafiou a Raid do Clã!')" class="w-full bg-crimson/80 hover:bg-crimson text-white font-display font-bold py-2 rounded-lg text-xs mt-1">
-        Atacar na Raid Coletiva
+</div>
+</div>
+<!-- Gacha Results Container -->
+<div class="hidden bg-[#10151f] border border-gold/40 rounded-xl p-3 space-y-2" id="gacha-results">
+<div class="font-display font-bold text-gold text-xs flex justify-between items-center">
+<span class="">Resultado dos Ecos Astrais:</span>
+<span class="text-[10px] text-slate-400">Adicionado ao Inventário</span>
+</div>
+<div class="grid grid-cols-5 gap-1.5 text-center text-xs" id="gacha-grid"></div>
+</div>
+</section>
+<!-- 8. TELA: ÁRVORE DE TALENTOS -->
+<section class="screen-container p-4 space-y-4" id="screen-talents">
+<div class="border-b border-gold/30 pb-2 flex justify-between items-center">
+<div>
+<h2 class="text-lg font-display font-bold text-gold">Árvore de Bênçãos &amp; Talentos</h2>
+<p class="text-xs text-slate-400">Ganhe 1 ponto a cada nível conquistado em batalha.</p>
+</div>
+<div class="text-xs bg-gold/20 border border-gold/40 text-gold px-2.5 py-1 rounded font-mono font-bold">
+        Pontos: <span id="talents-available-points" class="">0</span>
+</div>
+</div>
+<div class="space-y-2.5 text-xs" id="talents-tree-container">
+<!-- Renderizado dinamicamente -->
+</div>
+</section>
+<!-- 9. TELA: CLÃ & RAIDS COOPERATIVAS -->
+<section class="screen-container p-4 space-y-4" id="screen-clan">
+<div class="border-b border-gold/30 pb-2">
+<h2 class="text-lg font-display font-bold text-gold">Clã: Ordem do Zênite [Nv. 8]</h2>
+<p class="text-xs text-slate-400">Membros: 29/30 • Ranking Global: #3 Valíria</p>
+</div>
+<div class="bg-[#151c27] border border-crimson/40 rounded-xl p-3.5 space-y-2">
+<div class="flex justify-between items-center text-xs">
+<span class="font-display font-bold text-red-300">Raid Semanal: Belial, o Behemoth</span>
+<span class="text-[10px] text-slate-400">Reset em 2 dias</span>
+</div>
+<div class="text-[11px] text-slate-300 font-mono">HP do Chefe Mundial: 38.400.000 / 100.000.000</div>
+<div class="w-full h-2.5 bg-black/60 rounded-full border border-red-950 overflow-hidden">
+<div class="h-full bg-crimson" style="width: 38.4%;"></div>
+</div>
+<button class="w-full bg-crimson/80 hover:bg-crimson text-white font-display font-bold py-2 rounded-lg text-xs mt-1" onclick="attackClanRaid()">
+        ⚔️ Desferir Ataque na Raid Coletiva
       </button>
-    </div>
-
-    <div class="bg-[#121822] border border-[#273549] rounded-xl p-3 text-xs space-y-2">
-      <div class="font-display font-bold text-gold">Bênçãos Ativas do Clã:</div>
-      <div class="flex justify-between text-[11px] text-slate-300 border-b border-[#222c3c] pb-1">
-        <span>+10% EXP em Masmorras</span>
-        <span class="text-emerald-400 font-bold">Ativo</span>
-      </div>
-      <div class="flex justify-between text-[11px] text-slate-300 border-b border-[#222c3c] pb-1">
-        <span>+8% Chance Crítica de Grupo</span>
-        <span class="text-emerald-400 font-bold">Ativo</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 10. TELA: ARENA PVP RANQUEADA -->
-  <section id="screen-pvp" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">Arena do Julgamento de Aço</h2>
-      <p class="text-xs text-slate-400">Liga: Mestre I (2.840 Pontos)</p>
-    </div>
-
-    <div class="space-y-2.5">
-      <div class="bg-[#131923] border border-[#2b394e] p-3 rounded-xl flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-slate-100 text-xs">Oponente: Lorde_Morvath</div>
-          <div class="text-[10px] text-slate-400">Poder: 178.400 • Mago + Assassino</div>
-        </div>
-        <button onclick="showToast('Duelo PvP iniciado!')" class="bg-gold/20 hover:bg-gold/30 border border-gold text-gold font-display font-bold text-[10px] px-3 py-1.5 rounded-lg">
-          Desafiar
+</div>
+<div class="bg-[#121822] border border-[#273549] rounded-xl p-3 text-xs space-y-2">
+<div class="font-display font-bold text-gold">Bênçãos Ativas do Clã:</div>
+<div class="flex justify-between text-[11px] text-slate-300 border-b border-[#222c3c] pb-1">
+<span class="">+15% EXP em Masmorras</span>
+<span class="text-emerald-400 font-bold">Ativo</span>
+</div>
+<div class="flex justify-between text-[11px] text-slate-300 border-b border-[#222c3c] pb-1">
+<span class="">+10% Chance Crítica de Grupo</span>
+<span class="text-emerald-400 font-bold">Ativo</span>
+</div>
+</div>
+</section>
+<!-- 10. TELA: ARENA PVP RANQUEADA -->
+<section class="screen-container p-4 space-y-4" id="screen-pvp">
+<div class="border-b border-gold/30 pb-2 flex justify-between items-center">
+<div>
+<h2 class="text-lg font-display font-bold text-gold">Arena do Julgamento de Aço</h2>
+<p class="text-xs text-slate-400">Liga dos Campeões • Suba de Elos</p>
+</div>
+<span class="text-xs font-mono text-amber-300 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/30">Mestre I</span>
+</div>
+<div class="space-y-2.5">
+<div class="bg-[#131923] border border-[#2b394e] p-3 rounded-xl flex items-center justify-between">
+<div>
+<div class="font-display font-bold text-slate-100 text-xs">Oponente: Lorde_Morvath</div>
+<div class="text-[10px] text-slate-400">Poder: 48.200 • Mago Arcano Nv.15</div>
+</div>
+<button class="bg-gold/20 hover:bg-gold/30 border border-gold text-gold font-display font-bold text-[10px] px-3 py-1.5 rounded-lg" onclick="challengePvP('Lorde_Morvath', 500)">
+          Duelo (+500🪙)
         </button>
-      </div>
-
-      <div class="bg-[#131923] border border-[#2b394e] p-3 rounded-xl flex items-center justify-between">
-        <div>
-          <div class="font-display font-bold text-slate-100 text-xs">Oponente: Valkyria_Gamer</div>
-          <div class="text-[10px] text-slate-400">Poder: 182.100 • Paladino + Arqueiro</div>
-        </div>
-        <button onclick="showToast('Duelo PvP iniciado!')" class="bg-gold/20 hover:bg-gold/30 border border-gold text-gold font-display font-bold text-[10px] px-3 py-1.5 rounded-lg">
-          Desafiar
+</div>
+<div class="bg-[#131923] border border-[#2b394e] p-3 rounded-xl flex items-center justify-between">
+<div>
+<div class="font-display font-bold text-slate-100 text-xs">Oponente: Valkyria_Gamer</div>
+<div class="text-[10px] text-slate-400">Poder: 56.400 • Assassino Nv.18</div>
+</div>
+<button class="bg-gold/20 hover:bg-gold/30 border border-gold text-gold font-display font-bold text-[10px] px-3 py-1.5 rounded-lg" onclick="challengePvP('Valkyria_Gamer', 750)">
+          Duelo (+750🪙)
         </button>
-      </div>
-    </div>
-  </section>
+</div>
+</div>
+</section>
+<!-- 11. TELA: GRIMÓRIO & BESTIÁRIO -->
+<section class="screen-container p-4 space-y-4" id="screen-bestiary">
+<div class="border-b border-gold/30 pb-2">
+<h2 class="text-lg font-display font-bold text-gold">Compêndio dos 10 Lordes Abissais</h2>
+<p class="text-xs text-slate-400">Guia tático de fraquezas elementais e árvores de IA.</p>
+</div>
+<div class="space-y-2.5" id="bestiary-list-container">
+<!-- Renderizado via JS -->
+</div>
+</section>
+<!-- PERSISTENT MOBILE BOTTOM NAVIGATION BAR -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-[#0a0e14]/98 backdrop-blur-lg border-t border-[#222d3d] px-2 py-1.5 flex justify-around text-center text-[10px] font-display">
+<button class="nav-btn flex-1 py-1 flex flex-col items-center text-slate-400" id="nav-lobby" onclick="navigateTo('screen-lobby')">
+<span class="text-base">🏰</span>
+<span class="">Lobby</span>
+</button>
+<button class="nav-btn flex-1 py-1 hover:text-gold flex flex-col items-center text-slate-400" id="nav-battle" onclick="navigateTo('screen-battle')">
+<span class="text-base">⚔️</span>
+<span class="">Batalha</span>
+</button>
+<button class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center" id="nav-map" onclick="navigateTo('screen-map')">
+<span class="text-base">🗺️</span>
+<span class="">Mapa</span>
+</button>
+<button class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center" id="nav-inventory" onclick="navigateTo('screen-inventory')">
+<span class="text-base">🎒</span>
+<span class="">Inventário</span>
+</button>
+<button class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center" id="nav-forge" onclick="navigateTo('screen-forge')">
+<span class="text-base">🔨</span>
+<span class="">Forja</span>
+</button>
+<button class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center" id="nav-gacha" onclick="navigateTo('screen-gacha')">
+<span class="text-base">✨</span>
+<span class="">Gacha</span>
+</button>
+</nav>
+<!-- MODAL: FLUXO DE CRIAÇÃO DE PERSONAGEM (NOVO JOGO) -->
+<div class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden" id="modal-char-creation" style="pointer-events: auto;">
+<div class="bg-[#111620] border-2 border-gold/60 rounded-2xl w-full max-w-md p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+<div class="text-center space-y-1">
+<div class="text-3xl">⚔️ ⚜️ ⚔️</div>
+<h2 class="text-xl font-display font-black text-gold">Consagração do Herói</h2>
+<p class="text-xs text-slate-300">Escolha o seu nome e classe para ingressar na Ordem do Zênite.</p>
+</div>
+<!-- Nome do Herói -->
+<div class="space-y-1 text-left">
+<label class="text-xs font-display font-bold text-gold">Nome do Campeão:</label>
+<input class="w-full bg-[#090d13] border border-gold/40 text-gold-light rounded-xl px-3 py-2 text-sm font-display focus:outline-none focus:border-gold" id="input-hero-name" maxlength="16" type="text" value="Valerius">
+</div>
+<!-- Seleção de Classe -->
+<div class="space-y-2 text-left">
+<label class="text-xs font-display font-bold text-gold">Selecione a Classe Inicial:</label>
+<div class="grid grid-cols-5 gap-1.5 text-center" id="char-create-class-tabs">
+<!-- Botões das 5 classes -->
+</div>
+</div>
+<!-- Preview da Classe Selecionada -->
+<div class="bg-[#0b0f15] p-3.5 rounded-xl border border-[#263447] text-left space-y-2 text-xs" id="char-create-preview">
+<!-- Detalhes do preview -->
+</div>
+<!-- Botão Consagrar -->
+<button id="btn-confirm-create-hero" type="button" class="w-full bg-gradient-to-r from-amber-600 via-gold to-amber-500 hover:from-amber-500 hover:to-gold text-abyss font-display font-black py-3 rounded-xl border border-gold-light text-xs shadow-xl tracking-wider uppercase cursor-pointer relative z-50" style="cursor: pointer; position: relative; z-index: 60; pointer-events: auto !important;" onclick="confirmCharacterCreation()">Consagrar Herói &amp; Iniciar Jornada</button>
+</div>
+</div>
+<!-- MODAL: VITÓRIA DO COMBATE -->
+<div class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden" id="modal-victory">
+<div class="bg-[#111722] border-2 border-gold rounded-2xl w-full max-w-sm p-5 shadow-2xl text-center space-y-4">
+<div class="text-4xl animate-bounce">🏆</div>
+<h2 class="text-xl font-display font-black text-gold">VITÓRIA CONQUISTADA!</h2>
+<p class="text-xs text-slate-300" id="victory-boss-defeated-text">O lorde abissal foi expurgado pela glória da Ordem.</p>
+<div class="bg-[#0b0e14] p-3 rounded-xl border border-[#273449] text-xs font-mono text-left space-y-1.5">
+<div class="text-gold font-bold font-display border-b border-[#222c3c] pb-1">Recompensas da Batalha:</div>
+<div class="flex justify-between"><span class="">EXP Recebido:</span><span class="text-amber-400 font-bold" id="vic-exp">+0 XP</span></div>
+<div class="flex justify-between"><span class="">Ouro Conquistado:</span><span class="text-amber-300 font-bold" id="vic-gold">+0 🪙</span></div>
+<div class="flex justify-between"><span class="">Cristais Astrais:</span><span class="text-cyan-300 font-bold" id="vic-gems">+0 💎</span></div>
+<div class="flex justify-between"><span class="">Material de Forja:</span><span class="text-emerald-400 font-bold" id="vic-dust">+1 Poeira ✨</span></div>
+<div class="hidden text-emerald-400 font-bold text-center pt-1 animate-pulse" id="vic-level-up-notice">🌟 SUBIU DE NÍVEL! (+1 PONTO DE TALENTO)</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-[#1e2634] hover:bg-[#283244] border border-[#3b475a] text-slate-200 font-display py-2.5 rounded-xl text-xs" onclick="closeVictoryModal('screen-map')">
+          Ver Mapa
+        </button>
+<button class="flex-1 bg-gradient-to-r from-amber-600 to-gold text-abyss font-display font-black py-2.5 rounded-xl border border-gold text-xs shadow-lg" onclick="closeVictoryModal('screen-battle')">
+          Próxima Fase
+        </button>
+</div>
+</div>
+</div>
+<!-- MODAL: DERROTA NO COMBATE -->
+<div class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden" id="modal-defeat">
+<div class="bg-[#181114] border-2 border-red-500/80 rounded-2xl w-full max-w-sm p-5 shadow-2xl text-center space-y-4">
+<div class="text-4xl animate-pulse">💀</div>
+<h2 class="text-xl font-display font-black text-red-400">HERÓI DERROTADO</h2>
+<p class="text-xs text-slate-300">As trevas foram implacáveis. Refine seus equipamentos na Forja, melhore seus talentos e tente novamente.</p>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 bg-[#1e2634] hover:bg-[#283244] border border-[#3b475a] text-slate-200 font-display py-2.5 rounded-xl text-xs" onclick="closeDefeatModal('screen-forge')">
+          Ir para a Forja
+        </button>
+<button class="flex-1 bg-crimson hover:bg-red-600 text-white font-display font-bold py-2.5 rounded-xl border border-red-400 text-xs shadow-lg" onclick="retryCurrentBattle()">
+          Tentar Novamente
+        </button>
+</div>
+</div>
+</div>
+<!-- MODAL: PERFIL DO JOGADOR & SALVAMENTO -->
+<div class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden" id="modal-profile">
+<div class="bg-[#111722] border-2 border-gold/60 rounded-2xl w-full max-w-sm p-5 shadow-2xl space-y-4">
+<div class="flex justify-between items-center border-b border-gold/30 pb-2">
+<h3 class="font-display font-bold text-gold text-sm">Ficha do Campeão</h3>
+<button class="text-slate-400 hover:text-slate-200 text-base" onclick="closeProfileModal()">✕</button>
+</div>
+<div class="space-y-2 text-xs font-mono bg-[#0b0e14] p-3 rounded-xl border border-[#222c3c]">
+<div class="flex justify-between"><span class="text-slate-400">Nome:</span><span class="text-gold font-bold font-display" id="prof-name">Valerius</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Classe:</span><span class="text-slate-200" id="prof-class">Paladino</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Nível:</span><span class="text-amber-400 font-bold" id="prof-lvl">1</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Poder de Ataque:</span><span class="text-red-300" id="prof-atk">120</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Armadura / Mitigação:</span><span class="text-cyan-300" id="prof-def">80 (45%)</span></div>
+<div class="flex justify-between"><span class="text-slate-400">HP Total:</span><span class="text-emerald-300" id="prof-hp">2.500</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Fase Máxima:</span><span class="text-gold font-bold" id="prof-stage">Fase 1 / 10</span></div>
+</div>
+<div class="space-y-2">
+<button class="w-full bg-gold/20 hover:bg-gold/30 text-gold border border-gold/50 font-display font-bold py-2 rounded-xl text-xs" onclick="saveGame(true)">
+          💾 Salvar Progresso Agora
+        </button>
+<button class="w-full bg-red-950/40 hover:bg-red-950/80 text-red-300 border border-red-500/40 font-display font-bold py-2 rounded-xl text-xs" onclick="promptResetHero()">
+          ⚠️ Criar Novo Herói / Resetar
+        </button>
+</div>
+</div>
+</div>
+<!-- JAVASCRIPT GAME ENGINE: MOTOR COMPLETO DE ORDEM DO ZÊNITE -->
+<script>
+    // =========================================================================
+    // 1. BANCO DE DADOS DAS 5 CLASSES
+    // =========================================================================
+    const CLASS_DEFINITIONS = {
+      paladin: {
+        id: 'paladin',
+        name: 'Paladino',
+        role: 'Guardião da Luz • Híbrido Sagrado & Barreira',
+        icon: '🛡️',
+        baseHp: 2800,
+        hpPerLvl: 240,
+        baseAtk: 130,
+        atkPerLvl: 18,
+        baseDef: 110,
+        defPerLvl: 16,
+        resourceName: 'MANA',
+        baseResource: 320,
+        resourcePerLvl: 30,
+        damageType: 'Sagrado',
+        skills: [
+          { name: 'Golpe Solar', cost: 0, resGen: 40, cd: 0, desc: 'Dano Sagrado e gera +40 Mana.', mult: 1.4 },
+          { name: 'Julgamento Radiante', cost: 70, resGen: 0, cd: 0, desc: 'Dano alto. Interrompe conjuração do chefe!', mult: 2.3, interrupt: true },
+          { name: 'Bastião Inquebrável', cost: 110, resGen: 0, cd: 0, desc: 'Ergue barreira absorvente de dano sagrado.', shieldMult: 1.2 },
+          { name: 'Ira do Zênite (Suprema)', cost: 180, resGen: 0, cd: 0, desc: 'Dano sagrado catastrófico (320%) e restaura 25% de HP.', mult: 3.2, healRatio: 0.25 }
+        ]
+      },
+      warrior: {
+        id: 'warrior',
+        name: 'Guerreiro',
+        role: 'Juggernaut • Fúria Pura & Resistência Brutal',
+        icon: '⚔️',
+        baseHp: 3400,
+        hpPerLvl: 290,
+        baseAtk: 145,
+        atkPerLvl: 22,
+        baseDef: 130,
+        defPerLvl: 18,
+        resourceName: 'FÚRIA',
+        baseResource: 100,
+        resourcePerLvl: 5,
+        damageType: 'Físico',
+        skills: [
+          { name: 'Golpe Esmagador', cost: 0, resGen: 30, cd: 0, desc: 'Ataque pesado que gera +30 de Fúria.', mult: 1.5 },
+          { name: 'Corte Sangrento', cost: 40, resGen: 0, cd: 0, desc: 'Rasga a carne do alvo com dano penetrante.', mult: 2.5, interrupt: true },
+          { name: 'Grito de Guerra', cost: 30, resGen: 0, cd: 0, desc: 'Aumenta mitigação e concede escudo protetor.', shieldMult: 1.4 },
+          { name: 'Devastação Titânica (Suprema)', cost: 80, resGen: 0, cd: 0, desc: 'Golpe colossal de 360% de ATK que estremece a terra.', mult: 3.6, healRatio: 0.15 }
+        ]
+      },
+      mage: {
+        id: 'mage',
+        name: 'Mago',
+        role: 'Feiticeiro Arcano • Explosão Elemental Massiva',
+        icon: '🔮',
+        baseHp: 1950,
+        hpPerLvl: 160,
+        baseAtk: 210,
+        atkPerLvl: 32,
+        baseDef: 55,
+        defPerLvl: 9,
+        resourceName: 'MANA',
+        baseResource: 450,
+        resourcePerLvl: 45,
+        damageType: 'Arcano',
+        skills: [
+          { name: 'Raio Astral', cost: 0, resGen: 60, cd: 0, desc: 'Dispara centelha cósmica e canaliza +60 Mana.', mult: 1.6 },
+          { name: 'Lança de Gelo', cost: 90, resGen: 0, cd: 0, desc: 'Congela a mente do chefe, interrompendo canalizações!', mult: 2.6, interrupt: true },
+          { name: 'Barreira Arcana', cost: 120, resGen: 0, cd: 0, desc: 'Converte poder mental em escudo luminoso.', shieldMult: 1.1 },
+          { name: 'Singularidade Cósmica (Suprema)', cost: 220, resGen: 0, cd: 0, desc: 'Colapso gravitacional que causa 410% de dano Arcano.', mult: 4.1, healRatio: 0.1 }
+        ]
+      },
+      assassin: {
+        id: 'assassin',
+        name: 'Assassino',
+        role: 'Ceifador da Noite • Críticos Fatais & Furtividade',
+        icon: '🗡️',
+        baseHp: 2200,
+        hpPerLvl: 180,
+        baseAtk: 200,
+        atkPerLvl: 30,
+        baseDef: 70,
+        defPerLvl: 11,
+        resourceName: 'ENERGIA',
+        baseResource: 120,
+        resourcePerLvl: 8,
+        damageType: 'Sombra',
+        skills: [
+          { name: 'Apunhalada Rápida', cost: 0, resGen: 40, cd: 0, desc: 'Ataque veloz com lâmina envenenada (+40 Energia).', mult: 1.5 },
+          { name: 'Golpe na Jugular', cost: 50, resGen: 0, cd: 0, desc: 'Dano crítico altíssimo que quebra o foco do chefe!', mult: 2.7, interrupt: true },
+          { name: 'Manto de Sombras', cost: 35, resGen: 0, cd: 0, desc: 'Esconde-se nas sombras esquivando e gerando barreira.', shieldMult: 1.0 },
+          { name: 'Dança das Mil Lâminas (Suprema)', cost: 90, resGen: 0, cd: 0, desc: 'Sequência letal de cortes sombrios causando 390% dano.', mult: 3.9, healRatio: 0.12 }
+        ]
+      },
+      ranger: {
+        id: 'ranger',
+        name: 'Arqueiro',
+        role: 'Caçador Espectral • Precisão e Disparos à Distância',
+        icon: '🏹',
+        baseHp: 2350,
+        hpPerLvl: 195,
+        baseAtk: 185,
+        atkPerLvl: 28,
+        baseDef: 80,
+        defPerLvl: 12,
+        resourceName: 'FOCO',
+        baseResource: 150,
+        resourcePerLvl: 12,
+        damageType: 'Físico/Sagrado',
+        skills: [
+          { name: 'Disparo Certeiro', cost: 0, resGen: 45, cd: 0, desc: 'Flecha concentrada que repõe +45 de Foco.', mult: 1.45 },
+          { name: 'Tiro Silenciador', cost: 60, resGen: 0, cd: 0, desc: 'Flecha perfurante que corta magias telegrafadas!', mult: 2.4, interrupt: true },
+          { name: 'Instinto de Esquiva', cost: 40, resGen: 0, cd: 0, desc: 'Salto defensivo que mitiga e protege contra investidas.', shieldMult: 1.05 },
+          { name: 'Chuva de Flechas Astrais (Suprema)', cost: 110, resGen: 0, cd: 0, desc: 'Tempestade de projéteis celestiais causando 370% dano.', mult: 3.7, healRatio: 0.1 }
+        ]
+      }
+    };
 
-  <!-- 11. TELA: GRIMÓRIO & BESTIÁRIO -->
-  <section id="screen-bestiary" class="screen-container p-4 space-y-4">
-    <div class="border-b border-gold/30 pb-2">
-      <h2 class="text-lg font-display font-bold text-gold">Compêndio Ancestral de Monstros</h2>
-      <p class="text-xs text-slate-400">Descubra fraquezas e árvores de comportamento da IA dos 10 Lordes.</p>
-    </div>
+    // =========================================================================
+    // 2. BANCO DE DADOS DOS 10 CHEFES (10 FASES DO GDD)
+    // =========================================================================
+    const BOSS_DATA = [
+      {
+        stage: 1,
+        name: 'Gorgoroth, o Carniceiro',
+        title: 'Cripta das Cinzas',
+        element: 'Neutro / Físico',
+        weakness: 'Sagrado (+30%)',
+        weakClass: ['paladin'],
+        icon: '🧌',
+        hp: 4200,
+        atk: 140,
+        def: 30,
+        expReward: 350,
+        goldReward: 1200,
+        gemsReward: 80,
+        behaviorDesc: 'Aos 30% entra em Fúria (+40% ATK). Canaliza Decapitar!',
+        aiType: 'berserker'
+      },
+      {
+        stage: 2,
+        name: 'Vespera, a Matriarca da Noite',
+        title: 'Pântano de Sombras',
+        element: 'Veneno / Ruína',
+        weakness: 'Fogo & Sagrado (+35%)',
+        weakClass: ['paladin', 'mage'],
+        icon: '🕷️',
+        hp: 8500,
+        atk: 220,
+        def: 45,
+        expReward: 600,
+        goldReward: 2000,
+        gemsReward: 100,
+        behaviorDesc: 'Aplica toxinas corrosivas acumuladas a cada 2 turnos.',
+        aiType: 'poison'
+      },
+      {
+        stage: 3,
+        name: 'Kryos, o Colosso de Gelo',
+        title: 'Pico do Vento Gélido',
+        element: 'Gelo Primordial',
+        weakness: 'Fogo & Físico Pesado (+40%)',
+        weakClass: ['warrior', 'mage'],
+        icon: '❄️',
+        hp: 16000,
+        atk: 320,
+        def: 80,
+        expReward: 1100,
+        goldReward: 3500,
+        gemsReward: 130,
+        behaviorDesc: 'Ergue Escudo Glacial aos 50% de HP refletindo 25% de dano.',
+        aiType: 'shield_reflect'
+      },
+      {
+        stage: 4,
+        name: 'Morvath, o Inquisidor Decaído',
+        title: 'Catacumbas dos Templários',
+        element: 'Sombra / Corrupção',
+        weakness: 'Sagrado (+50%)',
+        weakClass: ['paladin', 'ranger'],
+        icon: '🧙‍♂️',
+        hp: 28000,
+        atk: 460,
+        def: 110,
+        expReward: 1800,
+        goldReward: 5200,
+        gemsReward: 160,
+        behaviorDesc: 'Drena mana do herói e telegrafa Lâmina Corrupta mortal.',
+        aiType: 'mana_drain'
+      },
+      {
+        stage: 5,
+        name: 'Sylvanna, a Rainha Espinhosa',
+        title: 'Floresta Profanada',
+        element: 'Natureza / Veneno',
+        weakness: 'Fogo & Cortes Críticos (+40%)',
+        weakClass: ['assassin', 'warrior'],
+        icon: '🥀',
+        hp: 46000,
+        atk: 620,
+        def: 150,
+        expReward: 2800,
+        goldReward: 7800,
+        gemsReward: 200,
+        behaviorDesc: 'Tece Casulos Regenerativos restaurando vida se não for interrompida.',
+        aiType: 'heal_interrupt'
+      },
+      {
+        stage: 6,
+        name: 'Astaroth, o General Sangrento',
+        title: 'Bastilha de Sangue',
+        element: 'Fogo / Trevas',
+        weakness: 'Gelo & Sagrado (+45%)',
+        weakClass: ['mage', 'paladin'],
+        icon: '👹',
+        hp: 75000,
+        atk: 880,
+        def: 210,
+        expReward: 4200,
+        goldReward: 11000,
+        gemsReward: 250,
+        behaviorDesc: 'Possui roubo de vida passivo. Telegrafa Torrente Sangrenta.',
+        aiType: 'lifesteal'
+      },
+      {
+        stage: 7,
+        name: "Xal'Keth, o Arauto do Vazio",
+        title: 'Abismo Sem Fim',
+        element: 'Vazio / Arcano Corrompido',
+        weakness: 'Luz Sagrada (+50%)',
+        weakClass: ['paladin', 'ranger'],
+        icon: '👁️',
+        hp: 125000,
+        atk: 1250,
+        def: 290,
+        expReward: 6500,
+        goldReward: 16000,
+        gemsReward: 320,
+        behaviorDesc: 'Ignora 35% de mitigação física. Abre buracos negros de vácuo.',
+        aiType: 'penetration'
+      },
+      {
+        stage: 8,
+        name: 'Aurelius, o Arcanjo Renegado',
+        title: 'Catedral Despedaçada',
+        element: 'Luz Corrompida',
+        weakness: 'Trevas & Físico Pesado (+45%)',
+        weakClass: ['warrior', 'assassin'],
+        icon: '🪽',
+        hp: 210000,
+        atk: 1750,
+        def: 380,
+        expReward: 9500,
+        goldReward: 24000,
+        gemsReward: 400,
+        behaviorDesc: 'Barreira divina inquebrável por 1 turno e Retribuição Celestial.',
+        aiType: 'invulnerable_turn'
+      },
+      {
+        stage: 9,
+        name: 'Belial, o Behemoth de Enxofre',
+        title: 'Portões do Tártaro',
+        element: 'Fogo Vulcânico',
+        weakness: 'Gelo & Sagrado (+50%)',
+        weakClass: ['mage', 'paladin'],
+        icon: '🌋',
+        hp: 340000,
+        atk: 2400,
+        def: 500,
+        expReward: 14000,
+        goldReward: 35000,
+        gemsReward: 550,
+        behaviorDesc: 'A cada 4 turnos canaliza Meteoro do Tártaro (wipe instantâneo).',
+        aiType: 'wipe_telegraph'
+      },
+      {
+        stage: 10,
+        name: 'Malfathor, o Devorador',
+        title: 'Antro de Enxofre (Chefe Final)',
+        element: 'Caos & Fogo Abissal',
+        weakness: 'Poder do Zênite Mítico (+60%)',
+        weakClass: ['paladin', 'warrior', 'mage', 'assassin', 'ranger'],
+        icon: '🐉',
+        hp: 600000,
+        atk: 3200,
+        def: 680,
+        expReward: 30000,
+        goldReward: 80000,
+        gemsReward: 1200,
+        behaviorDesc: '3 Fases: Chamas, Escudo de Magma com espinhos e Fúria do Eclipse.',
+        aiType: 'final_boss'
+      }
+    ];
 
-    <div class="space-y-3">
-      <div class="bg-[#141b25] border border-crimson/50 rounded-xl p-3">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="text-2xl">🐉</div>
-          <div>
-            <h3 class="font-display font-bold text-red-400 text-xs">Malfathor, o Devorador</h3>
-            <div class="text-[10px] text-slate-300">Elemento: Fogo / Caos • Fase 10</div>
+    // =========================================================================
+    // 3. ESTADO GLOBAL DO JOGO & PERSISTÊNCIA (localStorage)
+    // =========================================================================
+    const SAVE_KEY = 'ordem_do_zenite_save_v2';
+
+    let gameData = {
+      heroName: 'Valerius',
+      heroClass: 'paladin',
+      level: 1,
+      exp: 0,
+      gold: 2500,
+      gems: 300,
+      energy: 120,
+      maxEnergy: 120,
+      unlockedStage: 1,
+      dust: 10,
+      talentPoints: 0,
+      talentsBought: [false, false, false],
+      gear: {
+        weapon: { name: 'Espada do Recruta', icon: '🗡️', plus: 0, baseAtk: 40, baseHp: 0, baseDef: 0 },
+        helmet: { name: 'Elmo de Couro Fervido', icon: '👑', plus: 0, baseAtk: 0, baseHp: 180, baseDef: 20 },
+        chest: { name: 'Cota de Malha do Aprendiz', icon: '🛡️', plus: 0, baseAtk: 0, baseHp: 320, baseDef: 45 },
+        legs: { name: 'Perneiras de Ferro Velho', icon: '👖', plus: 0, baseAtk: 0, baseHp: 200, baseDef: 25 },
+        boots: { name: 'Botas de Marcha', icon: '👢', plus: 0, baseAtk: 10, baseHp: 120, baseDef: 15 }
+      },
+      lastDailyReward: null
+    };
+
+    // Objeto transitório de combate
+    let combatState = {
+      active: false,
+      stageIndex: 0,
+      boss: null,
+      bossCurrentHp: 1,
+      bossMaxHp: 1,
+      bossShield: 0,
+      heroCurrentHp: 1,
+      heroMaxHp: 1,
+      heroCurrentResource: 1,
+      heroMaxResource: 1,
+      heroShield: 0,
+      turn: 1,
+      telegraphing: false,
+      telegraphSpell: '',
+      phase: 1
+    };
+
+    // Classe selecionada no modal de criação
+    let tempSelectedCreationClass = 'paladin';
+
+    // =========================================================================
+    // 4. INICIALIZAÇÃO DO JOGO
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedGame();
+    });
+
+    function loadSavedGame() {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) {
+        // Primeiro acesso: abre modal de criação de personagem
+        openCharCreationModal();
+      } else {
+        try {
+          const parsed = JSON.parse(raw);
+          gameData = Object.assign({}, gameData, parsed);
+          finishSetup();
+        } catch (e) {
+          console.error('Falha ao carregar save', e);
+          openCharCreationModal();
+        }
+      }
+    }
+
+    function saveGame(showNotification = false) {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(gameData));
+      updateGlobalHUD();
+      if (showNotification) {
+        showToast('💾 Progresso salvo com sucesso no navegador!');
+      }
+    }
+
+    function finishSetup() {
+      updateGlobalHUD();
+      renderClassesList();
+      renderInventory();
+      renderStagesMap();
+      renderTalents();
+      renderBestiary();
+      updateForgePreview();
+      navigateTo('screen-lobby');
+    }
+
+    // =========================================================================
+    // 5. CRIAÇÃO DE PERSONAGEM
+    // =========================================================================
+    function openCharCreationModal() {
+      const modal = document.getElementById('modal-char-creation');
+      modal.classList.remove('hidden');
+      renderCreationClassTabs();
+      selectCreationClass('paladin');
+    }
+
+    function renderCreationClassTabs() {
+      const tabs = document.getElementById('char-create-class-tabs');
+      tabs.innerHTML = '';
+      Object.keys(CLASS_DEFINITIONS).forEach(classKey => {
+        const c = CLASS_DEFINITIONS[classKey];
+        const btn = document.createElement('button');
+        btn.id = `tab-create-${classKey}`;
+        btn.type = 'button';
+        btn.onclick = () => selectCreationClass(classKey);
+        btn.className = `p-2 rounded-xl border text-center transition flex flex-col items-center justify-center ${classKey === tempSelectedCreationClass ? 'border-gold bg-gold/20 text-gold' : 'border-[#263447] bg-[#141b25] text-slate-300'}`;
+        btn.innerHTML = `<span class="text-xl">${c.icon}</span><span class="text-[9px] font-display mt-0.5">${c.name}</span>`;
+        tabs.appendChild(btn);
+      });
+    }
+
+    function selectCreationClass(classKey) {
+      tempSelectedCreationClass = classKey;
+      renderCreationClassTabs();
+      const c = CLASS_DEFINITIONS[classKey];
+      const preview = document.getElementById('char-create-preview');
+      preview.innerHTML = `
+        <div class="flex items-center justify-between border-b border-[#253243] pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">${c.icon}</span>
+            <div>
+              <div class="font-display font-bold text-gold text-sm">${c.name}</div>
+              <div class="text-[10px] text-slate-400">${c.role}</div>
+            </div>
           </div>
+          <span class="text-[10px] text-amber-300 font-mono bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">Dano: ${c.damageType}</span>
         </div>
-        <div class="text-[11px] text-slate-300 space-y-1 bg-[#0d1219] p-2.5 rounded-lg border border-[#232f42]">
-          <div>• <span class="text-gold font-bold">Fraqueza:</span> Dano Sagrado (+50% de bônus).</div>
-          <div>• <span class="text-cyan-300 font-bold">Mecânica:</span> Ativa Escudo de Magma com 50.000 HP aos 70% de vida.</div>
-          <div>• <span class="text-amber-400 font-bold">Dica Tática:</span> Interrompa a conjuração do Sopro Telegrafado com Golpe Radiante!</div>
+        <div class="grid grid-cols-4 gap-1 text-[10px] font-mono bg-[#070b10] p-2 rounded-lg border border-[#1b2533]">
+          <div>HP: <span class="text-emerald-400 font-bold">${c.baseHp}</span></div>
+          <div>ATK: <span class="text-amber-400 font-bold">${c.baseAtk}</span></div>
+          <div>DEF: <span class="text-cyan-400 font-bold">${c.baseDef}</span></div>
+          <div>${c.resourceName}: <span class="text-purple-400 font-bold">${c.baseResource}</span></div>
         </div>
-      </div>
+        <div class="space-y-1 pt-1">
+          <div class="text-[10px] text-gold font-display font-bold">Habilidades Ativas:</div>
+          ${c.skills.map((s, idx) => `
+            <div class="text-[10px] text-slate-300 flex items-start gap-1">
+              <span class="text-gold font-bold">•</span>
+              <span><strong class="text-slate-100">${s.name}</strong>: ${s.desc}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
 
-      <div class="bg-[#141b25] border border-cyan-500/40 rounded-xl p-3">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="text-2xl">❄️</div>
-          <div>
-            <h3 class="font-display font-bold text-cyan-300 text-xs">Kryos, o Colosso de Gelo</h3>
-            <div class="text-[10px] text-slate-300">Elemento: Gelo • Fase 3</div>
-          </div>
-        </div>
-        <div class="text-[11px] text-slate-300 space-y-1 bg-[#0d1219] p-2.5 rounded-lg border border-[#232f42]">
-          <div>• <span class="text-red-400 font-bold">Fraqueza:</span> Fogo (+50% de bônus).</div>
-          <div>• <span class="text-slate-400">Reflete 20% do dano sofrido enquanto a barreira de gelo estiver erguida.</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
+    function confirmCharacterCreation() {
+      const nameInput = document.getElementById('input-hero-name').value.trim();
+      const heroName = nameInput.length > 0 ? nameInput : 'Valerius';
+      
+      const c = CLASS_DEFINITIONS[tempSelectedCreationClass];
 
-  <!-- PERSISTENT MOBILE BOTTOM NAVIGATION BAR -->
-  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-[#0a0e14]/98 backdrop-blur-lg border-t border-[#222d3d] px-2 py-1.5 flex justify-around text-center text-[10px] font-display">
-    <button onclick="navigateTo('screen-lobby')" id="nav-lobby" class="nav-btn flex-1 py-1 text-gold flex flex-col items-center">
-      <span class="text-base">🏰</span>
-      <span>Lobby</span>
-    </button>
-    <button onclick="navigateTo('screen-battle')" id="nav-battle" class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center">
-      <span class="text-base">⚔️</span>
-      <span>Batalha</span>
-    </button>
-    <button onclick="navigateTo('screen-inventory')" id="nav-inventory" class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center">
-      <span class="text-base">🎒</span>
-      <span>Inventário</span>
-    </button>
-    <button onclick="navigateTo('screen-classes')" id="nav-classes" class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center">
-      <span class="text-base">🛡️</span>
-      <span>Classes</span>
-    </button>
-    <button onclick="navigateTo('screen-map')" id="nav-map" class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center">
-      <span class="text-base">🗺️</span>
-      <span>Mapa</span>
-    </button>
-    <button onclick="navigateTo('screen-gacha')" id="nav-gacha" class="nav-btn flex-1 py-1 text-slate-400 hover:text-gold flex flex-col items-center">
-      <span class="text-base">✨</span>
-      <span>Gacha</span>
-    </button>
-  </nav>
+      gameData = {
+        heroName: heroName,
+        heroClass: tempSelectedCreationClass,
+        level: 1,
+        exp: 0,
+        gold: 2500,
+        gems: 300,
+        energy: 120,
+        maxEnergy: 120,
+        unlockedStage: 1,
+        dust: 10,
+        talentPoints: 0,
+        talentsBought: [false, false, false],
+        gear: {
+          weapon: { name: `Lâmina de ${heroName}`, icon: c.id === 'warrior' ? '🪓' : c.id === 'mage' ? '🪄' : c.id === 'assassin' ? '🗡️' : c.id === 'ranger' ? '🏹' : '🗡️', plus: 0, baseAtk: 45, baseHp: 0, baseDef: 0 },
+          helmet: { name: 'Elmo Protetor', icon: '👑', plus: 0, baseAtk: 0, baseHp: 180, baseDef: 20 },
+          chest: { name: 'Couraça de Batalha', icon: '🛡️', plus: 0, baseAtk: 0, baseHp: 320, baseDef: 45 },
+          legs: { name: 'Perneiras Reforçadas', icon: '👖', plus: 0, baseAtk: 0, baseHp: 200, baseDef: 25 },
+          boots: { name: 'Botas da Campanha', icon: '👢', plus: 0, baseAtk: 10, baseHp: 120, baseDef: 15 }
+        },
+        lastDailyReward: null
+      };
 
-  <!-- JAVASCRIPT GAME ENGINE (MULTI-SCREEN & COMBAT) -->
-  <script>
-    // Navegação entre telas do jogo
+      saveGame(false);
+      document.getElementById('modal-char-creation').classList.add('hidden');
+      finishSetup();
+      showToast(`Bem-vindo, ${heroName}! A bênção do Zênite acompanha seus passos.`);
+    }
+
+    function promptResetHero() {
+      if (confirm('Tem certeza de que deseja apagar o progresso atual e criar um Novo Campeão?')) {
+        closeProfileModal();
+        openCharCreationModal();
+      }
+    }
+
+    // =========================================================================
+    // 6. CÁLCULO DE STATUS DO HERÓI (BASE + NÍVEL + EQUIPAMENTOS + FORJA)
+    // =========================================================================
+    function getHeroStats() {
+      const c = CLASS_DEFINITIONS[gameData.heroClass] || CLASS_DEFINITIONS.paladin;
+      const lvl = gameData.level;
+
+      // Base + Nível
+      let maxHp = c.baseHp + (lvl - 1) * c.hpPerLvl;
+      let atk = c.baseAtk + (lvl - 1) * c.atkPerLvl;
+      let def = c.baseDef + (lvl - 1) * c.defPerLvl;
+      let maxResource = c.baseResource + (lvl - 1) * c.resourcePerLvl;
+
+      // Equipamentos e bônus de refino (+12% por nível de forja)
+      Object.keys(gameData.gear).forEach(slotKey => {
+        const item = gameData.gear[slotKey];
+        if (item) {
+          const refineBonus = 1 + (item.plus * 0.12);
+          maxHp += Math.round((item.baseHp || 0) * refineBonus);
+          atk += Math.round((item.baseAtk || 0) * refineBonus);
+          def += Math.round((item.baseDef || 0) * refineBonus);
+        }
+      });
+
+      // Bônus de talentos passivos
+      if (gameData.talentsBought[0]) atk = Math.round(atk * 1.15); // +15% ATK
+      if (gameData.talentsBought[1]) def = Math.round(def * 1.20); // +20% DEF
+      if (gameData.talentsBought[2]) maxHp = Math.round(maxHp * 1.20); // +20% HP
+
+      // Mitigação percentual baseada em DEF (Fórmula: DEF / (DEF + 100 + lvl*10))
+      const mitigation = Math.min(0.85, def / (def + 100 + lvl * 10));
+
+      return {
+        classDef: c,
+        maxHp,
+        atk,
+        def,
+        maxResource,
+        mitigation,
+        mitigationPct: Math.round(mitigation * 100)
+      };
+    }
+
+    function getExpForNextLevel(lvl) {
+      return Math.round(300 * Math.pow(1.35, lvl - 1));
+    }
+
+    // =========================================================================
+    // 7. ATUALIZAÇÃO DO HUD GLOBAL
+    // =========================================================================
+    function updateGlobalHUD() {
+      const stats = getHeroStats();
+      const expNeeded = getExpForNextLevel(gameData.level);
+
+      // Top Bar
+      document.getElementById('top-hero-name').innerText = gameData.heroName;
+      document.getElementById('top-hero-level').innerText = `Nv.${gameData.level}`;
+      document.getElementById('top-hero-sub').innerText = `${stats.classDef.name} • Ordem do Zênite`;
+      document.getElementById('top-hero-icon').innerText = stats.classDef.icon;
+      document.getElementById('top-gold').innerText = gameData.gold.toLocaleString();
+      document.getElementById('top-gems').innerText = gameData.gems.toLocaleString();
+
+      // Lobby
+      document.getElementById('lobby-hero-lvl').innerText = gameData.level;
+      document.getElementById('lobby-exp-text').innerText = `${gameData.exp.toLocaleString()} / ${expNeeded.toLocaleString()} XP`;
+      const expPct = Math.min(100, Math.round((gameData.exp / expNeeded) * 100));
+      document.getElementById('lobby-exp-bar').style.width = `${expPct}%`;
+      document.getElementById('lobby-fase-badge').innerText = `Fase ${gameData.unlockedStage} / 10`;
+
+      // Atualiza o chefe alvo no card do lobby
+      const currentBoss = BOSS_DATA[gameData.unlockedStage - 1] || BOSS_DATA[9];
+      document.getElementById('lobby-target-title').innerText = `Capítulo ${gameData.unlockedStage}: ${currentBoss.title}`;
+      document.getElementById('lobby-target-desc').innerText = `${currentBoss.name} aguarda seu desafio. Elemento: ${currentBoss.element}. ${currentBoss.behaviorDesc}`;
+      document.getElementById('lobby-battle-btn-text').innerText = `ENTRAR NA FASE ${gameData.unlockedStage}`;
+
+      // Badge de talentos
+      const tBadge = document.getElementById('talent-points-badge');
+      if (gameData.talentPoints > 0) {
+        tBadge.innerText = gameData.talentPoints;
+        tBadge.classList.remove('hidden');
+      } else {
+        tBadge.classList.add('hidden');
+      }
+
+      // Profile modal sync
+      document.getElementById('prof-name').innerText = gameData.heroName;
+      document.getElementById('prof-class').innerText = stats.classDef.name;
+      document.getElementById('prof-lvl').innerText = gameData.level;
+      document.getElementById('prof-atk').innerText = stats.atk.toLocaleString();
+      document.getElementById('prof-def').innerText = `${stats.def.toLocaleString()} (${stats.mitigationPct}%)`;
+      document.getElementById('prof-hp').innerText = stats.maxHp.toLocaleString();
+      document.getElementById('prof-stage').innerText = `Fase ${gameData.unlockedStage} / 10`;
+
+      // Forja displays
+      document.getElementById('forge-gold-display').innerText = gameData.gold.toLocaleString();
+      document.getElementById('forge-dust-display').innerText = gameData.dust.toLocaleString();
+      document.getElementById('inv-dust-count').innerText = gameData.dust.toLocaleString();
+      document.getElementById('gacha-gems-display').innerText = gameData.gems.toLocaleString();
+    }
+
+    // =========================================================================
+    // 8. NAVEGAÇÃO ENTRE TELAS
+    // =========================================================================
     function navigateTo(screenId) {
-      document.querySelectorAll('.screen-container').forEach(screen => {
-        screen.classList.remove('active');
+      document.querySelectorAll('.screen-container').forEach(sc => {
+        sc.classList.remove('active');
       });
       const target = document.getElementById(screenId);
       if (target) {
@@ -771,253 +1239,829 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      // Atualiza botões ativos na navbar
+      // Sincroniza navbar
       document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('text-gold');
         btn.classList.add('text-slate-400');
       });
-      const activeNavMap = {
+      const map = {
         'screen-lobby': 'nav-lobby',
         'screen-battle': 'nav-battle',
-        'screen-inventory': 'nav-inventory',
-        'screen-classes': 'nav-classes',
         'screen-map': 'nav-map',
+        'screen-inventory': 'nav-inventory',
+        'screen-forge': 'nav-forge',
         'screen-gacha': 'nav-gacha'
       };
-      if (activeNavMap[screenId]) {
-        const btn = document.getElementById(activeNavMap[screenId]);
-        if (btn) {
-          btn.classList.remove('text-slate-400');
-          btn.classList.add('text-gold');
+      if (map[screenId]) {
+        const b = document.getElementById(map[screenId]);
+        if (b) {
+          b.classList.remove('text-slate-400');
+          b.classList.add('text-gold');
         }
       }
+
+      // Atualiza conteúdos específicos ao abrir tela
+      if (screenId === 'screen-inventory') renderInventory();
+      if (screenId === 'screen-map') renderStagesMap();
+      if (screenId === 'screen-forge') updateForgePreview();
+      if (screenId === 'screen-talents') renderTalents();
     }
 
-    // Toast de notificação
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.innerText = msg;
       t.classList.remove('opacity-0', 'translate-y-2');
       setTimeout(() => {
         t.classList.add('opacity-0', 'translate-y-2');
-      }, 2200);
+      }, 2400);
     }
 
-    // ==========================================
-    // MOTOR DE COMBATE COMPLETO (MALFATHOR FASE 10)
-    // ==========================================
-    let combat = {
-      bossHp: 1200000,
-      bossMaxHp: 1200000,
-      heroHp: 184200,
-      heroMaxHp: 184200,
-      heroMana: 4850,
-      heroMaxMana: 4850,
-      heroShield: 0,
-      turn: 1,
-      telegraphing: false,
-      isPhase2: false
-    };
-
-    function logCombat(msg, color = 'text-slate-300') {
-      const box = document.getElementById('combat-log');
-      const row = document.createElement('div');
-      row.className = color;
-      row.innerText = msg;
-      box.appendChild(row);
-      box.scrollTop = box.scrollHeight;
+    function openProfileModal() {
+      document.getElementById('modal-profile').classList.remove('hidden');
+    }
+    function closeProfileModal() {
+      document.getElementById('modal-profile').classList.add('hidden');
     }
 
-    function spawnDmgPopup(text, color = 'text-amber-400') {
-      const p = document.getElementById('dmg-spawn-point');
-      const el = document.createElement('div');
-      el.className = `absolute left-1/2 -translate-x-1/2 font-display font-black text-lg dmg-pop ${color} pointer-events-none z-30`;
-      el.innerText = text;
-      p.appendChild(el);
-      setTimeout(() => el.remove(), 800);
+    // =========================================================================
+    // 9. MOTOR DE COMBATE DINÂMICO PARA AS 10 FASES
+    // =========================================================================
+    function startBossBattle(stageNumber) {
+      const stageIndex = Math.min(Math.max(1, stageNumber), 10) - 1;
+      const boss = BOSS_DATA[stageIndex];
+      const stats = getHeroStats();
+
+      combatState.active = true;
+      combatState.stageIndex = stageIndex;
+      combatState.boss = boss;
+      combatState.bossMaxHp = boss.hp;
+      combatState.bossCurrentHp = boss.hp;
+      combatState.bossShield = 0;
+      combatState.phase = 1;
+
+      combatState.heroMaxHp = stats.maxHp;
+      combatState.heroCurrentHp = stats.maxHp;
+      combatState.heroMaxResource = stats.maxResource;
+      combatState.heroCurrentResource = stats.maxResource;
+      combatState.heroShield = 0;
+      combatState.turn = 1;
+      combatState.telegraphing = false;
+
+      // Configura UI de combate
+      document.getElementById('battle-stage-badge').innerText = `FASE ${boss.stage}`;
+      document.getElementById('battle-boss-name').innerText = boss.name.toUpperCase();
+      document.getElementById('battle-boss-weakness').innerText = `Fraqueza: ${boss.weakness}`;
+      document.getElementById('battle-boss-icon').innerText = boss.icon;
+      document.getElementById('battle-hero-avatar').innerText = stats.classDef.icon;
+      document.getElementById('battle-hero-name').innerText = gameData.heroName;
+      document.getElementById('battle-hero-mitig').innerText = `${stats.mitigationPct}%`;
+      document.getElementById('hero-resource-name').innerText = stats.classDef.resourceName;
+
+      // Limpa log
+      const logBox = document.getElementById('combat-log');
+      logBox.innerHTML = `<div class="text-gold font-bold">⚔️ Confronto contra ${boss.name} iniciado!</div><div class="text-slate-400 text-[9px]">${boss.behaviorDesc}</div>`;
+
+      renderHeroBattleSkills();
+      updateCombatUI();
+      navigateTo('screen-battle');
+    }
+
+    function renderHeroBattleSkills() {
+      const c = CLASS_DEFINITIONS[gameData.heroClass] || CLASS_DEFINITIONS.paladin;
+      const container = document.getElementById('battle-skills-container');
+      container.innerHTML = '';
+
+      // Habilidades 0, 1 e 2
+      for (let i = 0; i < 3; i++) {
+        const s = c.skills[i];
+        const costLabel = s.cost > 0 ? `${s.cost} ${c.resourceName}` : `+${s.resGen} ${c.resourceName}`;
+        const btn = document.createElement('button');
+        btn.onclick = () => castHeroSkill(i);
+        btn.className = 'bg-[#161f2c] hover:bg-[#1e2a3c] border border-gold/40 p-2 rounded-xl transition flex flex-col justify-between h-20 shadow text-left';
+        btn.innerHTML = `
+          <div class="flex justify-between w-full text-[10px] text-gold font-display font-bold">
+            <span class="truncate">${s.name}</span>
+            <span class="text-slate-400 font-mono text-[9px]">${costLabel}</span>
+          </div>
+          <div class="text-[10px] text-slate-300 leading-tight line-clamp-2">${s.desc}</div>
+          <div class="text-[9px] ${s.cost > 0 ? 'text-blue-400' : 'text-emerald-400'} font-mono">${s.interrupt ? '⚠️ INTERROMPE' : s.shieldMult ? '🛡️ ESCUDO' : '⚔️ ATAQUE'}</div>
+        `;
+        container.appendChild(btn);
+      }
+
+      // Habilidade Suprema (Slot 3)
+      const ult = c.skills[3];
+      document.getElementById('ult-btn-name').innerText = `⚡ ${ult.name.toUpperCase()}`;
+      document.getElementById('ult-btn-desc').innerText = `${ult.cost} ${c.resourceName} • SUPREMA`;
     }
 
     function updateCombatUI() {
-      // Boss
-      const bPct = Math.max(0, (combat.bossHp / combat.bossMaxHp) * 100);
-      document.getElementById('boss-hp-bar').style.width = bPct + '%';
-      document.getElementById('boss-hp-text').innerText = `${combat.bossHp.toLocaleString()} / ${combat.bossMaxHp.toLocaleString()} (${bPct.toFixed(1)}%)`;
+      const bPct = Math.max(0, (combatState.bossCurrentHp / combatState.bossMaxHp) * 100);
+      document.getElementById('boss-hp-bar').style.width = `${bPct}%`;
+      document.getElementById('boss-hp-text').innerText = `${combatState.bossCurrentHp.toLocaleString()} / ${combatState.bossMaxHp.toLocaleString()} (${bPct.toFixed(1)}%)`;
 
-      // Hero
-      const hPct = Math.max(0, (combat.heroHp / combat.heroMaxHp) * 100);
-      document.getElementById('hero-hp-bar').style.width = hPct + '%';
-      document.getElementById('hero-hp-text').innerText = `${combat.heroHp.toLocaleString()} / ${combat.heroMaxHp.toLocaleString()}`;
+      const hPct = Math.max(0, (combatState.heroCurrentHp / combatState.heroMaxHp) * 100);
+      document.getElementById('hero-hp-bar').style.width = `${hPct}%`;
+      document.getElementById('hero-hp-text').innerText = `${combatState.heroCurrentHp.toLocaleString()} / ${combatState.heroMaxHp.toLocaleString()}`;
 
-      const mPct = Math.max(0, (combat.heroMana / combat.heroMaxMana) * 100);
-      document.getElementById('hero-mana-bar').style.width = mPct + '%';
-      document.getElementById('hero-mana-text').innerText = `${combat.heroMana.toLocaleString()} / ${combat.heroMaxMana.toLocaleString()}`;
+      const rPct = Math.max(0, (combatState.heroCurrentResource / combatState.heroMaxResource) * 100);
+      document.getElementById('hero-mana-bar').style.width = `${rPct}%`;
+      document.getElementById('hero-mana-text').innerText = `${combatState.heroCurrentResource.toLocaleString()} / ${combatState.heroMaxResource.toLocaleString()}`;
 
-      document.getElementById('hero-status-text').innerText = `Turno: ${combat.turn} | PA: 3/3`;
+      document.getElementById('hero-status-text').innerText = `Turno: ${combatState.turn} | Pronto`;
 
-      // Shield
+      // Escudo Hero
       const sBadge = document.getElementById('shield-badge');
-      if (combat.heroShield > 0) {
+      if (combatState.heroShield > 0) {
         sBadge.classList.remove('hidden');
-        document.getElementById('shield-val').innerText = combat.heroShield.toLocaleString();
+        document.getElementById('shield-val').innerText = combatState.heroShield.toLocaleString();
       } else {
         sBadge.classList.add('hidden');
       }
 
-      // Telegraph
+      // Banner Telegrafado do Boss
       const tBanner = document.getElementById('telegraph-banner');
-      if (combat.telegraphing) {
+      if (combatState.telegraphing) {
         tBanner.classList.remove('hidden');
+        tBanner.innerText = `⚠️ TELEGRAFANDO: ${combatState.telegraphSpell.toUpperCase()} (USE GOLPE QUE INTERROMPE!)`;
       } else {
         tBanner.classList.add('hidden');
       }
     }
 
-    function castSkill(skillKey) {
-      if (combat.bossHp <= 0) {
-        showToast('Malfathor já foi derrotado!');
-        return;
-      }
-
-      let dmg = 0;
-      if (skillKey === 'solar') {
-        dmg = Math.floor((4580 * 2.2 + 1500) * 1.5); // 1.5x elemental
-        combat.bossHp = Math.max(0, combat.bossHp - dmg);
-        combat.heroMana = Math.min(combat.heroMaxMana, combat.heroMana + 80);
-        spawnDmgPopup(`-${dmg.toLocaleString()} (SAGRADO!)`, 'text-amber-400');
-        logCombat(`⚔️ Valerius desferiu Julgamento do Sol: causou ${dmg.toLocaleString()} e recuperou +80 Mana.`, 'text-gold');
-      } 
-      else if (skillKey === 'radiant') {
-        if (combat.heroMana < 90) { showToast('Mana insuficiente!'); return; }
-        combat.heroMana -= 90;
-        dmg = Math.floor((4580 * 3.4) * 1.5);
-        combat.bossHp = Math.max(0, combat.bossHp - dmg);
-        spawnDmgPopup(`-${dmg.toLocaleString()} (CRÍTICO!)`, 'text-yellow-300');
-        if (combat.telegraphing) {
-          combat.telegraphing = false;
-          logCombat(`✨ Golpe Radiante interrompeu a conjuração mortal de Malfathor!`, 'text-cyan-300 font-bold');
-        } else {
-          logCombat(`☀️ Golpe Radiante causou ${dmg.toLocaleString()} de dano sagrado.`, 'text-amber-300');
-        }
-      }
-      else if (skillKey === 'bastion') {
-        if (combat.heroMana < 140) { showToast('Mana insuficiente!'); return; }
-        combat.heroMana -= 140;
-        combat.heroShield += 46000;
-        showToast('+46.000 de Escudo Sagrado ativado!');
-        logCombat(`🛡️ Valerius ergueu Bastião Sagrado (+46.000 Escudo).`, 'text-cyan-300');
-      }
-      else if (skillKey === 'ultimate') {
-        dmg = Math.floor((4580 * 5.8) * 1.75); // Bônus massivo
-        const heal = Math.floor(dmg * 0.2);
-        combat.bossHp = Math.max(0, combat.bossHp - dmg);
-        combat.heroHp = Math.min(combat.heroMaxHp, combat.heroHp + heal);
-        spawnDmgPopup(`-${dmg.toLocaleString()} WIPE!`, 'text-yellow-200');
-        showToast(`Ira do Zênite causou ${dmg.toLocaleString()} de dano e curou +${heal.toLocaleString()} HP!`);
-        logCombat(`⚡ IRA DO ZÊNITE CAUSOU ${dmg.toLocaleString()} E RESTAUROU ${heal.toLocaleString()} DE VIDA!`, 'text-yellow-300 font-bold');
-      }
-
-      // Check Boss Death
-      if (combat.bossHp <= 0) {
-        updateCombatUI();
-        logCombat(`🏆 VITÓRIA! Malfathor ruge e é banido para o abismo!`, 'text-gold font-bold');
-        setTimeout(() => {
-          alert('🏆 VITÓRIA ÉPICA! Você derrotou Malfathor e conquistou o conjunto Mítico do Zênite!');
-        }, 300);
-        return;
-      }
-
-      // Boss Turn & IA Behavior Tree
-      combat.turn++;
-      setTimeout(bossTurn, 500);
-      updateCombatUI();
+    function logCombat(msg, color = 'text-slate-300') {
+      const box = document.getElementById('combat-log');
+      const row = document.createElement('div');
+      row.className = color;
+      row.innerHTML = msg;
+      box.appendChild(row);
+      box.scrollTop = box.scrollHeight;
     }
 
-    function bossTurn() {
-      if (combat.bossHp <= 0) return;
+    function spawnCombatDmgPopup(text, color = 'text-amber-400') {
+      const p = document.getElementById('dmg-spawn-point');
+      const el = document.createElement('div');
+      el.className = `absolute left-1/2 -translate-x-1/2 font-display font-black text-lg dmg-pop ${color} pointer-events-none z-30 whitespace-nowrap`;
+      el.innerText = text;
+      p.appendChild(el);
+      setTimeout(() => el.remove(), 850);
+    }
 
-      // Fase 2 Escudo de Magma aos 70%
-      if (!combat.isPhase2 && combat.bossHp <= combat.bossMaxHp * 0.7) {
-        combat.isPhase2 = true;
-        document.getElementById('boss-phase-badge').innerText = 'Fase 2: Escudo de Magma';
-        logCombat(`🔥 Malfathor ruge e ativa ESCUDO DE MAGMA refletor de espinhos!`, 'text-red-400 font-bold');
+    function castHeroSkill(skillIndex) {
+      if (!combatState.active || combatState.bossCurrentHp <= 0) return;
+
+      const stats = getHeroStats();
+      const c = stats.classDef;
+      const skill = c.skills[skillIndex];
+
+      // Verificação de Recurso
+      if (skill.cost > 0 && combatState.heroCurrentResource < skill.cost) {
+        showToast(`${c.resourceName} insuficiente!`);
+        return;
       }
 
-      if (combat.telegraphing) {
-        // Dispara o wipe telegrafado se não foi quebrado
-        let rawDmg = 85000;
-        let mitigated = Math.floor(rawDmg * (1 - 0.691));
-        applyDamageToHero(mitigated);
-        logCombat(`🌋 Malfathor desferiu SOPRO DE MAGMA! Causou ${mitigated.toLocaleString()} de dano!`, 'text-red-500 font-bold');
-        combat.telegraphing = false;
+      // Consome ou gera recurso
+      if (skill.cost > 0) {
+        combatState.heroCurrentResource -= skill.cost;
+      }
+      if (skill.resGen > 0) {
+        combatState.heroCurrentResource = Math.min(combatState.heroMaxResource, combatState.heroCurrentResource + skill.resGen);
+      }
+
+      // Dano / Escudo / Efeito
+      if (skill.shieldMult) {
+        const shieldVal = Math.round(stats.maxHp * 0.25 * skill.shieldMult);
+        combatState.heroShield += shieldVal;
+        logCombat(`🛡️ <strong>${gameData.heroName}</strong> ergueu barreira absorvente (+${shieldVal.toLocaleString()} Escudo).`, 'text-cyan-300');
+        showToast(`+${shieldVal.toLocaleString()} de Escudo Ativado!`);
+      }
+
+      if (skill.mult) {
+        // Cálculo de Dano do Jogador com bônus elemental do Boss
+        let dmg = Math.round(stats.atk * skill.mult * (0.9 + Math.random() * 0.2));
+
+        // Bônus elemental se classe do jogador for ponto fraco do boss
+        if (combatState.boss.weakClass && combatState.boss.weakClass.includes(gameData.heroClass)) {
+          dmg = Math.round(dmg * 1.35);
+        }
+
+        // Interrupção de Telegrafo
+        if (skill.interrupt && combatState.telegraphing) {
+          combatState.telegraphing = false;
+          logCombat(`✨ <strong>INTERRUPÇÃO CRÍTICA!</strong> O golpe cortou a conjuração mortal de ${combatState.boss.name}!`, 'text-yellow-300 font-bold');
+          dmg = Math.round(dmg * 1.25);
+        }
+
+        combatState.bossCurrentHp = Math.max(0, combatState.bossCurrentHp - dmg);
+        spawnCombatDmgPopup(`-${dmg.toLocaleString()}!`, 'text-amber-400');
+        logCombat(`⚔️ <strong>${gameData.heroName}</strong> usou <em>${skill.name}</em> causando <strong>${dmg.toLocaleString()}</strong> de dano!`, 'text-gold');
+
+        // Cura se houver (ex: Suprema Paladino ou Guerreiro)
+        if (skill.healRatio) {
+          const heal = Math.round(dmg * skill.healRatio);
+          combatState.heroCurrentHp = Math.min(combatState.heroMaxHp, combatState.heroCurrentHp + heal);
+          logCombat(`💚 Efeito da habilidade restaurou <strong>+${heal.toLocaleString()} HP</strong>!`, 'text-emerald-400');
+        }
+      }
+
+      updateCombatUI();
+
+      // Checa morte do Boss
+      if (combatState.bossCurrentHp <= 0) {
+        handleCombatVictory();
+        return;
+      }
+
+      // Turno do Chefe
+      combatState.turn++;
+      setTimeout(executeBossTurn, 450);
+    }
+
+    function executeBossTurn() {
+      if (!combatState.active || combatState.bossCurrentHp <= 0) return;
+
+      const boss = combatState.boss;
+      const stats = getHeroStats();
+
+      // Fase 2 e 3 do Malfathor (Fase 10)
+      if (boss.aiType === 'final_boss') {
+        if (combatState.phase === 1 && combatState.bossCurrentHp <= combatState.bossMaxHp * 0.7) {
+          combatState.phase = 2;
+          document.getElementById('boss-phase-badge').innerText = 'Fase 2: Escudo de Magma';
+          logCombat(`🔥 <strong>Malfathor</strong> ativa ESCUDO DE MAGMA refletor de espinhos!`, 'text-red-400 font-bold');
+        } else if (combatState.phase === 2 && combatState.bossCurrentHp <= combatState.bossMaxHp * 0.3) {
+          combatState.phase = 3;
+          document.getElementById('boss-phase-badge').innerText = 'Fase 3: Fúria do Eclipse';
+          logCombat(`🌑 <strong>Malfathor</strong> entra em FÚRIA DO ECLIPSE! O dano aumenta vertiginosamente!`, 'text-purple-400 font-bold');
+        }
+      }
+
+      // Se o Boss estava telegrafando e NÃO foi interrompido: dispara ataque fatal
+      if (combatState.telegraphing) {
+        let rawDmg = boss.atk * 3.2;
+        let mitigatedDmg = Math.round(rawDmg * (1 - stats.mitigation));
+        applyDamageToHero(mitigatedDmg);
+        logCombat(`🌋 <strong>${boss.name}</strong> desferiu o golpe telegrafado <em>${combatState.telegraphSpell}</em>! Causou <strong>${mitigatedDmg.toLocaleString()}</strong> de dano massivo!`, 'text-red-500 font-bold');
+        combatState.telegraphing = false;
       } else {
-        // Chance de telegrafar a cada 3 turnos
-        if (combat.turn % 3 === 0) {
-          combat.telegraphing = true;
-          logCombat(`⚠️ Malfathor está canalizando o Sopro da Perdição! (Use Golpe Radiante para anular)`, 'text-amber-400 font-bold');
+        // Chance de iniciar Telegrafo mortal
+        const shouldTelegraph = (combatState.turn % 3 === 0);
+        if (shouldTelegraph) {
+          combatState.telegraphing = true;
+          combatState.telegraphSpell = boss.aiType === 'wipe_telegraph' ? 'Meteoro do Tártaro' : 'Sopro Abissal';
+          logCombat(`⚠️ <strong>${boss.name}</strong> está canalizando <em>${combatState.telegraphSpell}</em>! Use um golpe que interrompe no próximo turno!`, 'text-amber-400 font-bold');
         } else {
-          // Ataque normal mitigado pela armadura
-          let rawDmg = 28000;
-          let mitigated = Math.floor(rawDmg * (1 - 0.691));
-          applyDamageToHero(mitigated);
-          logCombat(`🐉 Malfathor golpeou com Garra Infernal: causou ${mitigated.toLocaleString()} de dano (Mitigação: 69%).`, 'text-red-300');
+          // Ataque normal do chefe com IA específica
+          let rawDmg = boss.atk * (0.85 + Math.random() * 0.3);
+
+          if (boss.aiType === 'berserker' && combatState.bossCurrentHp <= combatState.bossMaxHp * 0.3) {
+            rawDmg *= 1.4; // Fúria Berserk Gorgoroth
+          }
+          if (combatState.phase === 3) rawDmg *= 1.5;
+
+          let mitigatedDmg = Math.round(rawDmg * (1 - stats.mitigation));
+          applyDamageToHero(mitigatedDmg);
+          logCombat(`🐉 <strong>${boss.name}</strong> atacou ferozmente: causou <strong>${mitigatedDmg.toLocaleString()}</strong> de dano (Mitigado por ${stats.mitigationPct}%).`, 'text-red-300');
+
+          // Dreno de mana Morvath
+          if (boss.aiType === 'mana_drain') {
+            combatState.heroCurrentResource = Math.max(0, combatState.heroCurrentResource - 40);
+            logCombat(`🔮 Morvath drenou 40 pontos do seu recurso!`, 'text-purple-400');
+          }
         }
       }
+
       updateCombatUI();
+
+      // Checa derrota do Jogador
+      if (combatState.heroCurrentHp <= 0) {
+        handleCombatDefeat();
+      }
     }
 
-    function applyDamageToHero(dmg) {
-      if (combat.heroShield > 0) {
-        if (combat.heroShield >= dmg) {
-          combat.heroShield -= dmg;
+    function applyDamageToHero(amount) {
+      let dmg = amount;
+      if (combatState.heroShield > 0) {
+        if (combatState.heroShield >= dmg) {
+          combatState.heroShield -= dmg;
           dmg = 0;
         } else {
-          dmg -= combat.heroShield;
-          combat.heroShield = 0;
+          dmg -= combatState.heroShield;
+          combatState.heroShield = 0;
         }
       }
-      combat.heroHp = Math.max(0, combat.heroHp - dmg);
+      combatState.heroCurrentHp = Math.max(0, combatState.heroCurrentHp - dmg);
     }
 
-    // ==========================================
-    // FORJA DE ITENS
-    // ==========================================
-    function forgeItem() {
-      const roll = Math.random();
-      if (roll <= 0.4) {
-        showToast('🌟 SUCESSO LENDÁRIO! Montante aprimorado para +15!');
+    // =========================================================================
+    // 10. PROGRESSÃO, VITÓRIA & DERROTA
+    // =========================================================================
+    function handleCombatVictory() {
+      combatState.active = false;
+      const boss = combatState.boss;
+
+      // Recompensas
+      const expGained = boss.expReward;
+      const goldGained = boss.goldReward;
+      const gemsGained = boss.gemsReward;
+      const dustGained = 1;
+
+      gameData.gold += goldGained;
+      gameData.gems += gemsGained;
+      gameData.dust += dustGained;
+      gameData.exp += expGained;
+
+      // Desbloqueia próxima fase se era a fase atual
+      let unlockedNewStage = false;
+      if (boss.stage === gameData.unlockedStage && gameData.unlockedStage < 10) {
+        gameData.unlockedStage++;
+        unlockedNewStage = true;
+      }
+
+      // Nível do Herói
+      let leveledUp = false;
+      let needed = getExpForNextLevel(gameData.level);
+      while (gameData.exp >= needed && gameData.level < 100) {
+        gameData.exp -= needed;
+        gameData.level++;
+        gameData.talentPoints++;
+        leveledUp = true;
+        needed = getExpForNextLevel(gameData.level);
+      }
+
+      saveGame(false);
+
+      // Preenche Modal de Vitória
+      document.getElementById('victory-boss-defeated-text').innerText = `${boss.name} foi expurgado com sucesso!`;
+      document.getElementById('vic-exp').innerText = `+${expGained.toLocaleString()} XP`;
+      document.getElementById('vic-gold').innerText = `+${goldGained.toLocaleString()} 🪙`;
+      document.getElementById('vic-gems').innerText = `+${gemsGained.toLocaleString()} 💎`;
+      document.getElementById('vic-dust').innerText = `+${dustGained} Poeira Astral ✨`;
+
+      const lvlNotice = document.getElementById('vic-level-up-notice');
+      if (leveledUp) {
+        lvlNotice.classList.remove('hidden');
+        lvlNotice.innerText = `🌟 SUBIU PARA O NÍVEL ${gameData.level}! (+${gameData.talentPoints} Ponto de Talento)`;
       } else {
-        showToast('⚠️ Aprimoramento falhou! O Selo Protetor impediu a quebra.');
+        lvlNotice.classList.add('hidden');
+      }
+
+      document.getElementById('modal-victory').classList.remove('hidden');
+    }
+
+    function closeVictoryModal(destination) {
+      document.getElementById('modal-victory').classList.add('hidden');
+      updateGlobalHUD();
+      if (destination === 'screen-battle') {
+        startBossBattle(gameData.unlockedStage);
+      } else {
+        navigateTo('screen-map');
       }
     }
 
-    // ==========================================
-    // SISTEMA DE GACHA
-    // ==========================================
-    function pullGacha(count) {
+    function handleCombatDefeat() {
+      combatState.active = false;
+      document.getElementById('modal-defeat').classList.remove('hidden');
+    }
+
+    function closeDefeatModal(destination) {
+      document.getElementById('modal-defeat').classList.add('hidden');
+      navigateTo(destination);
+    }
+
+    function retryCurrentBattle() {
+      document.getElementById('modal-defeat').classList.add('hidden');
+      startBossBattle(combatState.boss.stage);
+    }
+
+    // =========================================================================
+    // 11. MAPA DAS 10 FASES
+    // =========================================================================
+    function renderStagesMap() {
+      const container = document.getElementById('stages-list-container');
+      container.innerHTML = '';
+
+      BOSS_DATA.forEach(b => {
+        const isCompleted = b.stage < gameData.unlockedStage;
+        const isCurrent = b.stage === gameData.unlockedStage;
+        const isLocked = b.stage > gameData.unlockedStage;
+
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border flex items-center justify-between transition ${
+          isCurrent 
+            ? 'bg-[#1c151e] border-crimson shadow-lg relative overflow-hidden' 
+            : isCompleted 
+            ? 'bg-[#121822] border-emerald-500/30' 
+            : 'bg-[#0e1219] border-[#1d2737] opacity-60'
+        }`;
+
+        let statusHtml = '';
+        if (isCompleted) {
+          statusHtml = `
+            <div class="flex items-center gap-2">
+              <span class="text-emerald-400 font-bold">✓ 3★</span>
+              <button onclick="startBossBattle(${b.stage})" class="bg-[#18212e] hover:bg-[#232f42] text-slate-300 text-[10px] px-2.5 py-1 rounded border border-[#2b394e]">Refazer</button>
+            </div>
+          `;
+        } else if (isCurrent) {
+          statusHtml = `
+            <button onclick="startBossBattle(${b.stage})" class="bg-crimson hover:bg-red-600 text-white font-display font-bold text-[10px] px-3 py-1.5 rounded-lg border border-red-300 shadow flex items-center gap-1">
+              <span>🔥</span> LUTAR
+            </button>
+          `;
+        } else {
+          statusHtml = `<span class="text-slate-500 font-mono text-[10px]">🔒 Bloqueado</span>`;
+        }
+
+        card.innerHTML = `
+          <div>
+            <div class="font-display font-bold ${isCurrent ? 'text-red-400' : isCompleted ? 'text-emerald-400' : 'text-slate-400'} text-xs flex items-center gap-1.5">
+              ${isCurrent ? '<span class="animate-ping w-2 h-2 rounded-full bg-red-500 inline-block"></span>' : ''}
+              Fase ${b.stage}: ${b.title} ${isCompleted ? '(Concluída)' : ''}
+            </div>
+            <div class="text-[10px] text-slate-300">Chefe: ${b.name} (${b.element})</div>
+          </div>
+          ${statusHtml}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // =========================================================================
+    // 12. INVENTÁRIO E EQUIPAMENTOS
+    // =========================================================================
+    function renderInventory() {
+      const container = document.getElementById('equipped-slots-container');
+      container.innerHTML = '';
+
+      const slotLabels = {
+        weapon: 'Arma Primária',
+        helmet: 'Elmo Protetor',
+        chest: 'Peitoral da Vanguarda',
+        legs: 'Grevas Guardiãs',
+        boots: 'Botas de Marcha'
+      };
+
+      Object.keys(gameData.gear).forEach(slotKey => {
+        const item = gameData.gear[slotKey];
+        const refineBonus = 1 + (item.plus * 0.12);
+        const card = document.createElement('div');
+        card.className = 'bg-[#131922] border border-[#2c3a4f] p-3 rounded-xl flex items-center justify-between';
+        
+        let statsStr = [];
+        if (item.baseAtk) statsStr.push(`+${Math.round(item.baseAtk * refineBonus)} ATK`);
+        if (item.baseHp) statsStr.push(`+${Math.round(item.baseHp * refineBonus)} HP`);
+        if (item.baseDef) statsStr.push(`+${Math.round(item.baseDef * refineBonus)} DEF`);
+
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-lg bg-[#1a2332] border border-gold/50 flex items-center justify-center text-xl shadow">
+              ${item.icon}
+            </div>
+            <div>
+              <div class="font-display font-bold text-gold text-xs">${item.name} <span class="text-emerald-400">+${item.plus}</span></div>
+              <div class="text-[10px] text-slate-300">${slotLabels[slotKey]} • ${statsStr.join(' • ')}</div>
+            </div>
+          </div>
+          <button onclick="selectForForge('${slotKey}')" class="text-[10px] bg-[#1d2737] hover:bg-[#273449] px-2.5 py-1 rounded border border-[#37475f] text-slate-200 font-display">Refinar</button>
+        `;
+        container.appendChild(card);
+      });
+
+      // Mochila
+      const bp = document.getElementById('backpack-items-container');
+      bp.innerHTML = `
+        <div class="bg-[#111722] p-2.5 rounded-lg border border-[#222d3e]">
+          <div class="font-bold text-gold">Poeira Cósmica de Forja</div>
+          <div class="text-[10px] text-slate-400">Quantidade: ${gameData.dust}x</div>
+        </div>
+        <div class="bg-[#111722] p-2.5 rounded-lg border border-[#222d3e]">
+          <div class="font-bold text-cyan-300">Cristais Astrais de Invocação</div>
+          <div class="text-[10px] text-slate-400">Quantidade: ${gameData.gems}x</div>
+        </div>
+      `;
+    }
+
+    function autoEquipBest() {
+      showToast('Todos os equipamentos foram calibrados com sucesso!');
+      updateGlobalHUD();
+    }
+
+    // =========================================================================
+    // 13. FORJA & APRIMORAMENTO (+1 A +15)
+    // =========================================================================
+    function selectForForge(slotKey) {
+      const sel = document.getElementById('forge-select-slot');
+      if (sel) sel.value = slotKey;
+      navigateTo('screen-forge');
+      updateForgePreview();
+    }
+
+    function updateForgePreview() {
+      const slot = document.getElementById('forge-select-slot').value;
+      const item = gameData.gear[slot];
+      if (!item) return;
+
+      document.getElementById('forge-target-icon').innerText = item.icon;
+      document.getElementById('forge-target-name').innerText = `${item.name}`;
+      document.getElementById('forge-current-level').innerText = `+${item.plus}`;
+      document.getElementById('forge-next-level').innerText = item.plus >= 15 ? 'MÁXIMO' : `+${item.plus + 1}`;
+
+      // Taxas e Custos
+      const costGold = (item.plus + 1) * 800;
+      const costDust = Math.max(1, Math.floor((item.plus + 1) / 3) + 1);
+      // Taxa: de 100% (+0) até 25% (+14)
+      const successRate = Math.max(25, 100 - item.plus * 5);
+
+      document.getElementById('forge-rate').innerText = item.plus >= 15 ? 'MAX' : `${successRate}%`;
+      document.getElementById('forge-cost-gold').innerText = item.plus >= 15 ? '-' : `${costGold.toLocaleString()} Ouro`;
+      document.getElementById('forge-cost-dust').innerText = item.plus >= 15 ? '-' : `${costDust} Poeira`;
+    }
+
+    function attemptForgeUpgrade() {
+      const slot = document.getElementById('forge-select-slot').value;
+      const item = gameData.gear[slot];
+      if (!item) return;
+
+      if (item.plus >= 15) {
+        showToast('Este equipamento já atingiu o refino MÁXIMO (+15)!');
+        return;
+      }
+
+      const costGold = (item.plus + 1) * 800;
+      const costDust = Math.max(1, Math.floor((item.plus + 1) / 3) + 1);
+      const successRate = Math.max(25, 100 - item.plus * 5);
+
+      if (gameData.gold < costGold) {
+        showToast('Ouro insuficiente para o refino ancestral!');
+        return;
+      }
+      if (gameData.dust < costDust) {
+        showToast('Poeiras Astrais insuficientes!');
+        return;
+      }
+
+      // Consome recursos
+      gameData.gold -= costGold;
+      gameData.dust -= costDust;
+
+      // Rolagem
+      const roll = Math.random() * 100;
+      if (roll <= successRate) {
+        item.plus++;
+        showToast(`✨ SUCESSO LENDÁRIO! ${item.name} aprimorado para +${item.plus}!`);
+      } else {
+        showToast('⚠️ Aprimoramento falhou! A bênção da Bigorna impediu a perda do item.');
+      }
+
+      saveGame(false);
+      updateGlobalHUD();
+      updateForgePreview();
+    }
+
+    // =========================================================================
+    // 14. GACHA & SANTUÁRIO DE INVOCAÇÃO
+    // =========================================================================
+    function executeGacha(count) {
+      const cost = count === 10 ? 900 : 100;
+      if (gameData.gems < cost) {
+        showToast('Cristais Astrais insuficientes!');
+        return;
+      }
+
+      gameData.gems -= cost;
+
       const container = document.getElementById('gacha-results');
       const grid = document.getElementById('gacha-grid');
       grid.innerHTML = '';
       container.classList.remove('hidden');
 
-      const drops = [
-        { name: 'Valerius 5★', icon: '👑', r: 'gold' },
-        { name: 'Montante 5★', icon: '🗡️', r: 'gold' },
-        { name: 'Azael 4★', icon: '🔮', r: 'purple' },
-        { name: 'Kaelen 4★', icon: '🗡️', r: 'purple' },
-        { name: 'Elmo Raro', icon: '🛡️', r: 'blue' },
-        { name: 'Arco Élfico', icon: '🏹', r: 'blue' },
-        { name: 'Poeira Astral', icon: '✨', r: 'slate' }
+      const dropsPool = [
+        { name: 'Relíquia do Zênite (5★)', icon: '👑', type: 'gold', rewardDust: 10, rewardGold: 5000 },
+        { name: 'Espada Lendária (5★)', icon: '🗡️', type: 'gold', rewardDust: 8, rewardGold: 4000 },
+        { name: 'Tomo Arcano de Azael (4★)', icon: '🔮', type: 'purple', rewardDust: 5, rewardGold: 2000 },
+        { name: 'Adaga da Sombra (4★)', icon: '🗡️', type: 'purple', rewardDust: 4, rewardGold: 1800 },
+        { name: 'Arco Sagrado (4★)', icon: '🏹', type: 'purple', rewardDust: 4, rewardGold: 1800 },
+        { name: 'Poeira Astral Brilhante', icon: '✨', type: 'blue', rewardDust: 3, rewardGold: 800 },
+        { name: 'Bolsa de Moedas Antigas', icon: '🪙', type: 'blue', rewardDust: 1, rewardGold: 1200 }
       ];
 
+      let addedDust = 0;
+      let addedGold = 0;
+
       for (let i = 0; i < count; i++) {
-        const item = drops[Math.floor(Math.random() * drops.length)];
+        const item = dropsPool[Math.floor(Math.random() * dropsPool.length)];
+        addedDust += item.rewardDust;
+        addedGold += item.rewardGold;
+
         const card = document.createElement('div');
-        card.className = `bg-[#18202d] p-2 rounded-lg border border-${item.r === 'gold' ? 'amber-400' : item.r === 'purple' ? 'purple-400' : 'slate-600'} text-center`;
-        card.innerHTML = `<div class="text-base">${item.icon}</div><div class="text-[9px] text-slate-200 mt-1 truncate">${item.name}</div>`;
+        const borderColor = item.type === 'gold' ? 'border-amber-400' : item.type === 'purple' ? 'border-purple-400' : 'border-slate-500';
+        card.className = `bg-[#18202d] p-2 rounded-lg border ${borderColor} text-center`;
+        card.innerHTML = `
+          <div class="text-base">${item.icon}</div>
+          <div class="text-[9px] text-slate-200 mt-1 truncate">${item.name}</div>
+        `;
         grid.appendChild(card);
       }
-      showToast(`Invocação x${count} realizada com sucesso!`);
+
+      gameData.dust += addedDust;
+      gameData.gold += addedGold;
+
+      saveGame(false);
+      showToast(`Invocação x${count} concluída: +${addedDust} Poeiras e +${addedGold.toLocaleString()} Ouro!`);
+    }
+
+    // =========================================================================
+    // 15. ÁRVORE DE TALENTOS
+    // =========================================================================
+    function renderTalents() {
+      const container = document.getElementById('talents-tree-container');
+      container.innerHTML = '';
+
+      document.getElementById('talents-available-points').innerText = gameData.talentPoints;
+
+      const talentList = [
+        { id: 0, name: 'Aura da Aurora (Tier 1)', desc: 'Aumenta permanentemente o Dano Total em +15%.' },
+        { id: 1, name: 'Bastião Inabalável (Tier 2)', desc: 'Aumenta a Armadura e Mitigação contra chefes em +20%.' },
+        { id: 2, name: 'Vitalidade Sagrada (Tier 3)', desc: 'Aumenta a Vida Máxima (HP) do herói em +20%.' }
+      ];
+
+      talentList.forEach(t => {
+        const isLearned = gameData.talentsBought[t.id];
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border flex items-center justify-between ${
+          isLearned ? 'bg-[#14221b] border-emerald-500/50' : 'bg-[#141b25] border-gold/40'
+        }`;
+
+        let btnHtml = '';
+        if (isLearned) {
+          btnHtml = `<span class="text-emerald-400 font-bold font-display text-[11px]">✓ Aprendido</span>`;
+        } else {
+          btnHtml = `
+            <button onclick="learnTalent(${t.id})" class="bg-gold/20 hover:bg-gold/30 border border-gold text-gold text-[10px] px-3 py-1 rounded font-bold font-display">
+              Aprender (1 pt)
+            </button>
+          `;
+        }
+
+        card.innerHTML = `
+          <div>
+            <div class="font-display font-bold ${isLearned ? 'text-emerald-300' : 'text-gold'}">${t.name}</div>
+            <div class="text-[10px] text-slate-300">${t.desc}</div>
+          </div>
+          ${btnHtml}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function learnTalent(talentId) {
+      if (gameData.talentPoints <= 0) {
+        showToast('Você não possui Pontos de Talento suficientes! Suba de nível para ganhar pontos.');
+        return;
+      }
+      if (gameData.talentsBought[talentId]) return;
+
+      gameData.talentPoints--;
+      gameData.talentsBought[talentId] = true;
+      saveGame(false);
+      renderTalents();
+      showToast('🌟 Talento aprendido com sucesso!');
+    }
+
+    // =========================================================================
+    // 16. DESAFIOS DIÁRIOS, CLÃ E ARENA PVP
+    // =========================================================================
+    function claimDailyBlessing() {
+      gameData.gold += 1000;
+      gameData.gems += 100;
+      saveGame(false);
+      const btn = document.getElementById('btn-daily-blessing');
+      btn.innerText = 'Coletado';
+      btn.disabled = true;
+      btn.className = 'bg-slate-800 text-slate-500 border border-slate-700 text-[10px] px-3 py-1 rounded font-display';
+      showToast('🎁 +1.000 Ouro e +100 Cristais adicionados à sua conta!');
+    }
+
+    function claimDailyDust() {
+      gameData.dust += 3;
+      saveGame(false);
+      const btn = document.getElementById('btn-daily-forge-reward');
+      btn.innerText = 'Coletado';
+      btn.disabled = true;
+      btn.className = 'bg-slate-800 text-slate-500 border border-slate-700 text-[10px] px-3 py-1 rounded font-display';
+      showToast('✨ +3 Poeiras Astrais de Forja resgatadas!');
+    }
+
+    function attackClanRaid() {
+      const stats = getHeroStats();
+      const dmg = Math.round(stats.atk * 14.5);
+      gameData.gold += 2000;
+      saveGame(false);
+      showToast(`⚔️ Você causou ${dmg.toLocaleString()} de dano na Raid Semanal e recebeu +2.000 Ouro!`);
+    }
+
+    function challengePvP(rivalName, reward) {
+      const stats = getHeroStats();
+      const roll = Math.random();
+      if (roll > 0.3) {
+        gameData.gold += reward;
+        saveGame(false);
+        showToast(`🏆 VITÓRIA NA ARENA contra ${rivalName}! Você ganhou +${reward} Ouro!`);
+      } else {
+        showToast(`Duelo acirrado contra ${rivalName}! Tente novamente após fortalecer seus itens.`);
+      }
+    }
+
+    // =========================================================================
+    // 17. GRIMÓRIO & BESTIÁRIO
+    // =========================================================================
+    function renderBestiary() {
+      const container = document.getElementById('bestiary-list-container');
+      container.innerHTML = '';
+
+      BOSS_DATA.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'bg-[#141b25] border border-gold/30 rounded-xl p-3 space-y-1.5';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">${b.icon}</span>
+              <div>
+                <div class="font-display font-bold text-gold text-xs">Fase ${b.stage}: ${b.name}</div>
+                <div class="text-[10px] text-slate-400">Elemento: ${b.element}</div>
+              </div>
+            </div>
+            <span class="text-[10px] text-amber-300 font-mono bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/30">${b.weakness}</span>
+          </div>
+          <div class="text-[11px] text-slate-300 bg-[#0c1017] p-2 rounded-lg border border-[#232f42]">
+            ${b.behaviorDesc}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // =========================================================================
+    // 18. LISTA DAS 5 CLASSES
+    // =========================================================================
+    function renderClassesList() {
+      const container = document.getElementById('classes-list-container');
+      container.innerHTML = '';
+
+      Object.keys(CLASS_DEFINITIONS).forEach(key => {
+        const c = CLASS_DEFINITIONS[key];
+        const isActive = gameData.heroClass === key;
+
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border relative transition ${
+          isActive ? 'bg-[#18212e] border-gold shadow-md' : 'bg-[#141b25] border-[#283446]'
+        }`;
+
+        card.innerHTML = `
+          ${isActive ? '<span class="absolute top-3 right-3 text-[10px] bg-gold/20 text-gold px-2 py-0.5 rounded font-display font-bold border border-gold/40">Classe Ativa</span>' : ''}
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-lg bg-gold/10 border border-gold/40 flex items-center justify-center text-xl">${c.icon}</div>
+            <div>
+              <h3 class="font-display font-bold text-gold text-sm">${c.name}</h3>
+              <div class="text-[11px] text-slate-300">${c.role}</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-4 gap-2 text-[10px] font-mono bg-[#0e131b] p-2 rounded-lg border border-[#263242]">
+            <div>HP Base: <span class="text-slate-200">${c.baseHp}</span></div>
+            <div>ATK: <span class="text-amber-400">${c.baseAtk}</span></div>
+            <div>DEF: <span class="text-slate-200">${c.baseDef}</span></div>
+            <div>${c.resourceName}: <span class="text-cyan-400">${c.baseResource}</span></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
   </script>
-</body>
-</html>
+
+
+<script>
+window.confirmCharacterCreation = function() {
+  var nameInput = document.getElementById('input-hero-name');
+  var name = nameInput ? nameInput.value.trim() : '';
+  var selectedClass = (typeof tempSelectedCreationClass !== 'undefined' ? tempSelectedCreationClass : (typeof selectedCreationClass !== 'undefined' ? selectedCreationClass : 'paladin'));
+  var cls = (typeof CLASS_DEFINITIONS !== 'undefined' && CLASS_DEFINITIONS[selectedClass]) ? CLASS_DEFINITIONS[selectedClass] : (typeof CLASS_DEFINITIONS !== 'undefined' ? CLASS_DEFINITIONS.paladin : { name: 'Paladino' });
+  if (!name) name = (cls && cls.defaultName) ? cls.defaultName : 'Valerius';
+  gameData.heroName = name;
+  gameData.heroClass = selectedClass;
+  gameData.level = 1;
+  gameData.exp = 0;
+  gameData.gold = 1000;
+  gameData.gems = 100;
+  gameData.unlockedStage = 1;
+  gameData.dust = 10;
+  try { localStorage.setItem('ordem_do_zenite_save_v2', JSON.stringify(gameData)); } catch(e){}
+  var modal = document.getElementById('modal-char-creation');
+  if (modal) { modal.classList.add('hidden'); modal.style.display = 'none'; }
+  if (typeof updateGlobalHUD === 'function') updateGlobalHUD();
+  if (typeof navigateTo === 'function') navigateTo('screen-lobby');
+  if (typeof showToast === 'function') showToast('Herói consagrado com sucesso! Bem-vindo à Ordem do Zénite!');
+};
+var btn = document.getElementById('btn-confirm-create-hero');
+if (btn) { btn.onclick = window.confirmCharacterCreation; }
+</script></body></html>
